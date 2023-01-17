@@ -1,10 +1,6 @@
 macro(build_mumps)
-  set(oneValueArgs VERSION)
+  set(oneValueArgs VERSION MD5)
   cmake_parse_arguments(BUILD_MUMPS "" "${oneValueArgs}" "" ${ARGN})
-  
-  if (NOT BUILD_MUMPS_VERSION)
-    set(BUILD_MUMPS_VERSION "5.4.0.5")
-  endif()
   
   if (BLAS_TYPE STREQUAL "IntelMKL")
     set(MUMPS_BLAS_OPTS -D MKLROOT=${MKL_ROOT})
@@ -16,8 +12,29 @@ macro(build_mumps)
     )
   endif()
   
-  string(CONCAT BUILD_MUMPS_REPO "https://github.com/scivision/" "mumps.git")
-  string(CONCAT BUILD_MUMPS_TAG "v" ${BUILD_MUMPS_VERSION})
+  # Assamble the Download URL
+  set(TMP_NAME "v${BUILD_MUMPS_VERSION}")
+  set(TMP_PACKING ".tar.gz")
+  set(TMP_URL "https://github.com/scivision/mumps/archive/refs/tags/")
+  set(BUILD_MUMPS_URL "${TMP_URL}${TMP_NAME}${TMP_PACKING}")
+
+  # Assamble the Mirror (if provided)
+  if(DEFINED MIRROR) 
+    # overwrite the default packing, in case that the mirror uses a different format
+    if (NOT DEFINED MIRROR_PACKING)
+      set(TMP_MIRROR_PACKING TMP_PACKING)
+    else 
+      set(TMP_MIRROR_PACKING MIRROR_PACKING)
+    endif()
+
+    set(BUILD_MUMPS_URL "${MIRROR}${TMP_NAME}${TMP_MIRROR_PACKING} ${BUILD_MUMPS_URL}")
+    unset(TMP_MIRROR_PACKING)
+  endif()
+   
+  # Unset temporal variables
+  unset(TMP_NAME)
+  unset(TMP_PACKING)
+  unset(TMP_URL)
 
   set(BUILD_MUMPS_C_FLAGS "-g -fPIC -O3")
   set(BUILD_MUMPS_F_FLAGS "-fallow-argument-mismatch")
@@ -40,11 +57,13 @@ macro(build_mumps)
     unset(TMP_VERSION)
     file(DOWNLOAD ${MUMPS_SRC_URL} ${CMAKE_BINARY_DIR}/MUMPS/build/_deps/mumps-subbuild/mumps-populate-prefix/src/${MUMPS_FILENAME})
   endif()
+
+  # Build MUMPS
   build_cmake_git_subproject(
     NAME MUMPS
     VERSION ${BUILD_MUMPS_VERSION}
-    GIT_REPO ${BUILD_MUMPS_REPO}
-    GIT_TAG ${BUILD_MUMPS_TAG}
+    URL ${BUILD_MUMPS_URL}
+    MD5 ${BUILD_MUMPS_MD5}
     DOWNLOAD_ONLY ${DOWNLOAD_ONLY}
     BUILD_ARGS
       -D metis=true

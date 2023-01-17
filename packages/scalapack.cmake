@@ -1,26 +1,47 @@
 macro(build_scalapack)
 
-  set(oneValueArgs VERSION)
+  set(oneValueArgs VERSION MD5)
   cmake_parse_arguments(BUILD_SCALAPACK "" "${oneValueArgs}" "" ${ARGN})
 
   if(${INSTALL_reference_scalapack})
-    if( NOT BUILD_SCALAPACK_VERSION )
-      set(BUILD_SCALAPACK_VERSION "2.1.0")
-    endif()
     set(BUILD_SCALAPACK_C_FLAGS "-g -fPIC -O3")
     set(BUILD_SCALAPACK_F_FLAGS "-fallow-argument-mismatch")
-    
-    string(CONCAT BUILD_SCALAPACK_REPO "https://github.com/Reference-ScaLAPACK/" "scalapack.git")
-    string(CONCAT BUILD_SCALAPACK_TAG "v" ${BUILD_SCALAPACK_VERSION})
-  elseif(${INSTALL_amd_scalapack})
+
+    # Assamble the Download URL
+    set(TMP_NAME "v${BUILD_SCALAPACK_VERSION}")
+    set(TMP_PACKING ".tar.gz")
+    set(TMP_URL "https://github.com/Reference-ScaLAPACK/scalapack/archive/refs/tags/")
+    set(BUILD_SCALAPACK_URL "${TMP_URL}${TMP_NAME}${TMP_PACKING}")
   
+    # Assamble the Mirror (if provided)
+    if(DEFINED MIRROR) 
+      # overwrite the default packing, in case that the mirror uses a different format
+      if (NOT DEFINED MIRROR_PACKING)
+        set(TMP_MIRROR_PACKING TMP_PACKING)
+      else 
+        set(TMP_MIRROR_PACKING MIRROR_PACKING)
+      endif()
+  
+      set(BUILD_SCALAPACK_URL "${MIRROR}${TMP_NAME}${TMP_MIRROR_PACKING} ${BUILD_SCALAPACK_URL}")
+      unset(TMP_MIRROR_PACKING)
+    endif()
+  
+    # Unset temporal variables
+    unset(TMP_NAME)
+    unset(TMP_PACKING)
+    unset(TMP_URL)
+
+    
+  elseif(${INSTALL_amd_scalapack})
+    #TODO
   endif()
 
-  build_cmake_git_subproject(
+  # Build ScaLAPACK
+  build_cmake_subproject(
     NAME ScaLAPACK
     VERSION ${BUILD_SCALAPACK_VERSION}
-    GIT_REPO ${BUILD_SCALAPACK_REPO}
-    GIT_TAG ${BUILD_SCALAPACK_TAG}
+    URL ${BUILD_SCALAPACK_URL}
+    MD5 ${BUILD_SCALAPACK_MD5}
     DOWNLOAD_ONLY ${DOWNLOAD_ONLY}
     BUILD_ARGS
       -D BUILD_SHARED_LIBS:BOOL=ON

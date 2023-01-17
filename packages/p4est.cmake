@@ -1,35 +1,39 @@
 macro(build_p4est)
-
-set(oneValueArgs VERSION)
+  set(oneValueArgs VERSION MD5)
   cmake_parse_arguments(BUILD_P4EST "" "${oneValueArgs}" "" ${ARGN})
   
-  if (NOT BUILD_P4EST_VERSION)
-    set(BUILD_P4EST_VERSION "2.3.2")
-  endif()
-  
-  
-  set(BUILD_P4EST_MD5 "")
-  if (BUILD_P4EST_VERSION STREQUAL "2.3.2")
-    set(BUILD_P4EST_MD5 0ea6e4806b6950ad64e62a5607bfabbb)
-  endif()
-  string(CONCAT BUILD_P4EST_URL "https://p4est.github.io/release/p4est-"
-  ${BUILD_P4EST_VERSION} ".tar.gz")
-  
-  
-      
-  if (NOT DEFINED BUILD_P4EST_VERSION)  
-    set(P4EST_INSTALL_PATH ${CMAKE_INSTALL_PREFIX})
-  else()
-    set(P4EST_INSTALL_PATH ${CMAKE_INSTALL_PREFIX}/p4est-${BUILD_P4EST_VERSION})
-  endif()
-  
-  
+  # Assamble the Download URL
+  set(TMP_NAME "p4est-${BUILD_P4EST_VERSION}")
+  set(TMP_PACKING ".tar.gz")
+  set(TMP_URL "https://p4est.github.io/release/")
+  set(BUILD_P4EST_URL "${TMP_URL}${TMP_NAME}${TMP_PACKING}")
 
+  # Assamble the Mirror (if provided)
+  if(DEFINED MIRROR) 
+    # overwrite the default packing, in case that the mirror uses a different format
+    if (NOT DEFINED MIRROR_PACKING)
+      set(TMP_MIRROR_PACKING TMP_PACKING)
+    else 
+      set(TMP_MIRROR_PACKING MIRROR_PACKING)
+    endif()
+
+    set(BUILD_P4EST_URL "${MIRROR}${TMP_NAME}${TMP_MIRROR_PACKING} ${BUILD_P4EST_URL}")
+    unset(TMP_MIRROR_PACKING)
+  endif()
+
+  # Unset temporal variables
+  unset(TMP_NAME)
+  unset(TMP_PACKING)
+  unset(TMP_URL)
+
+  # Set Install path
+  set(P4EST_INSTALL_PATH ${CMAKE_INSTALL_PREFIX}/p4est-${BUILD_P4EST_VERSION})
+
+  # Unfortunatly p4est does not support CMake or Autotools, therefore we need a special building chain
   set(p4est_fast_flags --prefix=${P4EST_INSTALL_PATH}/FAST CFLAGS=-O2)
   set(p4est_debug_flags --prefix=${P4EST_INSTALL_PATH}/DEBUG CFLAGS=-O0)
   set(p4est_enable_flags --enable-shared --disable-vtk-binary --without-blas --enable-mpi)
   set(p4est_compile_flags CPPFLAGS=-DSC_LOG_PRIORITY=SC_LP_ESSENTIAL F77=mpif77 )
-
 
   if(DOWNLOAD_ONLY)
     ExternalProject_Add(

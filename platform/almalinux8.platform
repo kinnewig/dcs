@@ -1,0 +1,22 @@
+# AlmaLinux 8
+
+# This build script assumes that you have several packages already
+# installed.
+#
+# > sudo dnf groupinstall "Development Tools"
+# > sudo dnf install git wget \
+#   gcc-c++ cmake \
+#   openmpi openmpi-devel \
+#   patch \
+#   libtool libtool-ltdl libtool-ltdl-devel \
+#   lua lua-devel \
+#   blas blas-devel lapack lapack-devel \
+#   gmp gmp-devel \
+#   doxygen graphviz graphviz-devel
+#
+# Please load the 'openmpi' compiler with
+#
+# > module load mpi/openmpi-x86_64
+#
+# before you continue!
+##

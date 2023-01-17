@@ -1,19 +1,37 @@
 macro(build_superlu_dist)
-  set(oneValueArgs VERSION)
+  set(oneValueArgs VERSION MD5)
   cmake_parse_arguments(BUILD_SUPERLU "" "${oneValueArgs}" "" ${ARGN})
   
-  if (NOT BUILD_SUPERLU_VERSION)
-    set(BUILD_SUPERLU_VERSION "5.1.2")
+  # Assamble the Download URL
+  set(TMP_NAME "v${BUILD_SUPERLU_VERSION}")
+  set(TMP_PACKING ".tar.gz")
+  set(TMP_URL "https://github.com/xiaoyeli/superlu_dist/archive/refs/tags/")
+  set(BUILD_SUPERLU_URL "${TMP_URL}${TMP_NAME}${TMP_PACKING}")
+
+  # Assamble the Mirror (if provided)
+  if(DEFINED MIRROR) 
+    # overwrite the default packing, in case that the mirror uses a different format
+    if (NOT DEFINED MIRROR_PACKING)
+      set(TMP_MIRROR_PACKING TMP_PACKING)
+    else 
+      set(TMP_MIRROR_PACKING MIRROR_PACKING)
+    endif()
+
+    set(BUILD_SUPERLU_URL "${MIRROR}${TMP_NAME}${TMP_MIRROR_PACKING} ${BUILD_SUPERLU_URL}")
+    unset(TMP_MIRROR_PACKING)
   endif()
-  
-  string(CONCAT BUILD_SUPERLU_REPO "https://github.com/xiaoyeli/" "superlu_dist.git")
-  string(CONCAT BUILD_SUPERLU_TAG "v" ${BUILD_SUPERLU_VERSION})
-  
-  build_cmake_git_subproject(
+
+  # Unset temporal variables
+  unset(TMP_NAME)
+  unset(TMP_PACKING)
+  unset(TMP_URL)
+
+  # Build SuperLU-dist
+  build_cmake_subproject(
     NAME SuperLU_DIST
     VERSION ${BUILD_SUPERLU_VERSION}
-    GIT_REPO ${BUILD_SUPERLU_REPO}
-    GIT_TAG ${BUILD_SUPERLU_TAG}
+    URL ${BUILD_SUPERLU_URL}
+    MD5 ${BUILD_SUPERLU_MD5}
     DOWNLOAD_ONLY ${DOWNLOAD_ONLY}
     BUILD_ARGS
       -D TPL_PARMETIS_INCLUDE_DIRS:PATH=${ParMETIS_DIR}/include

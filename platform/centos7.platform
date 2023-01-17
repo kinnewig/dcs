@@ -1,0 +1,26 @@
+# CentOS 7
+
+# This build script assumes that you have several packages already
+# installed via CentOS's yum using the following command:
+#
+# > sudo yum install patch svn git wget \
+#   @development-tools gcc-c++ cmake \
+#   centos-release-scl devtoolset-9 \
+#   openmpi openmpi-devel \
+#   patch \
+#   libtool libtool-ltdl libtool-ltdl-devel \
+#   lua lua-devel \
+#   blas blas-devel lapack lapack-devel \
+#   doxygen graphviz graphviz-devel qt-devel \
+#   gmp-devel
+#
+# Be sure to switch to the recent compilers with
+#
+# > scl enable devtoolset-9 bash
+#
+# Please load the 'openmpi' compiler with
+#
+# > module load mpi/openmpi-x86_64
+#
+# before you continue!
+##

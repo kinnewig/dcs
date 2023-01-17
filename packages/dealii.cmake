@@ -1,12 +1,7 @@
 macro(build_dealii)
-  cmake_policy(SET CMP0074 NEW) #use _ROOT in find package!
-  set(oneValueArgs VERSION MAIN)
+  set(oneValueArgs VERSION MD5)
   cmake_parse_arguments(BUILD_DEALII "" "${oneValueArgs}" "" ${ARGN})
-  
-  if (NOT BUILD_DEALII_VERSION)
-    set(BUILD_DEALII_VERSION "9.4.0")
-  endif()
-  
+
   string(REPLACE "." ";" TMPLIST ${BUILD_DEALII_VERSION})
   list(GET TMPLIST 0 BUILD_DEALII_MAJOR_VERSION)
   list(GET TMPLIST 1 BUILD_DEALII_MINOR_VERSION)
@@ -22,19 +17,40 @@ macro(build_dealii)
     endif()
   endif()
   
-  
-  string(CONCAT BUILD_DEALII_REPO "https://github.com/dealii/" "dealii.git")
-  string(CONCAT BUILD_DEALII_TAG "v" ${BUILD_DEALII_VERSION})
-  
   if(DEFINED BOOST_DIR)
     list(APPEND DEALII_CONFOPTS "-D BOOST_DIR=${BOOST_DIR}")
     else()
   endif()
-  build_cmake_git_subproject(
+
+  # Assamble the Download URL
+  set(TMP_NAME "dealii-${BUILD_DEALII_VERSION}")
+  set(TMP_PACKING ".tar.gz")
+  set(TMP_URL "https://github.com/dealii/dealii/releases/download/${BUILD_DEALII_VERSION}/")
+  set(BUILD_DEALII_URL "${TMP_URL}${TMP_NAME}${TMP_PACKING}")
+
+  # Assamble the Mirror (if provided)
+  if(DEFINED MIRROR) 
+    # overwrite the default packing, in case that the mirror uses a different format
+    if (NOT DEFINED MIRROR_PACKING)
+      set(TMP_MIRROR_PACKING TMP_PACKING)
+    else 
+      set(TMP_MIRROR_PACKING MIRROR_PACKING)
+    endif()
+
+    set(BUILD_DEALII_URL "${MIRROR}${TMP_NAME}${TMP_MIRROR_PACKING} ${BUILD_DEALII_URL}")
+    unset(TMP_MIRROR_PACKING)
+  endif()
+ 
+  # Unset temporal variables
+  unset(TMP_NAME)
+  unset(TMP_PACKING)
+  unset(TMP_URL)
+
+  build_cmake_subproject(
     NAME dealii-${BUILD_DEALII_VERSION}
     VERSION "in_name"
-    GIT_REPO ${BUILD_DEALII_REPO}
-    GIT_TAG ${BUILD_DEALII_TAG}
+    URL ${BUILD_DEALII_URL}
+    MD5 ${BUILD_DEALII_MD5}
     DOWNLOAD_ONLY ${DOWNLOAD_ONLY}
     BUILD_ARGS
       -D CMAKE_BUILD_TYPE=DebugRelease

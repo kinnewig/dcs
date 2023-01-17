@@ -1,0 +1,19 @@
+# RHEL 7
+
+# This build script assumes that you have several packages already
+# installed via RHEL's yum using the following command:
+#
+# > sudo yum install svn git wget \
+#   @development-tools gcc-c++ cmake \
+#   patch \
+#   libtool libtool-ltdl libtool-ltdl-devel \
+#   lua lua-devel \
+#   blas blas-devel lapack lapack-devel \
+#   doxygen graphviz graphviz-devel qt-devel
+#
+# Please load the 'openmpi' compiler with
+#
+# > module load mpi/openmpi-x86_64
+#
+# before you continue!
+##

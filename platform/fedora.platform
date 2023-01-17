@@ -1,0 +1,18 @@
+# Fedora
+
+# This build script assumes that you have several packages already
+# installed via Fedora's dnf using the following command:
+#
+# > sudo dnf install \
+#   @development-tools gcc-c++ cmake patch libtool lua lua-devel \
+#   doxygen graphviz graphviz-devel \
+#   blas blas-devel lapack lapack-devel \
+#   openmpi openmpi-devel \
+#   metis metis-devel
+#
+# Please load the 'openmpi' compiler with
+#
+# > module load mpi/openmpi-x86_64
+#
+# before you continue!
+##

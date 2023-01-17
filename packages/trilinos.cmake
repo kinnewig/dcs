@@ -1,17 +1,34 @@
 macro(build_trilinos)
-  set(oneValueArgs VERSION)
+  set(oneValueArgs VERSION MD5)
   cmake_parse_arguments(BUILD_TRILINOS "" "${oneValueArgs}" "" ${ARGN})
-  
-  if (NOT BUILD_TRILINOS_VERSION)
-    set(BUILD_TRILINOS_VERSION "12.18.1")
+
+  # Assamble the Download URL
+  string(REPLACE "." "-" TMP_VERSION ${TRILINOS_VERSION})
+  set(TMP_NAME "trilinos-release-${TMP_VERSION}")
+  set(TMP_PACKING ".tar.gz")
+  set(TMP_URL "https://github.com/trilinos/Trilinos/archive/")
+  set(BUILD_TRILINOS_URL "${TMP_URL}${TMP_NAME}${TMP_PACKING}")
+
+  # Assamble the Mirror (if provided)
+  if(DEFINED MIRROR) 
+    # overwrite the default packing, in case that the mirror uses a different format
+    if (NOT DEFINED MIRROR_PACKING)
+      set(TMP_MIRROR_PACKING TMP_PACKING)
+    else 
+      set(TMP_MIRROR_PACKING MIRROR_PACKING)
+    endif()
+
+    set(BUILD_TRILINOS_URL "${MIRROR}${TMP_NAME}${TMP_PACKING} ${BUILD_TRILINOS_URL}")
+    unset(TMP_MIRROR_PACKING)
   endif()
-    
-  string(REPLACE "." "-" TMPVER ${BUILD_TRILINOS_VERSION})
-  
-  string(CONCAT BUILD_TRILINOS_REPO "https://github.com/trilinos/" "Trilinos.git")
-  string(CONCAT BUILD_TRILINOS_TAG "trilinos-release-" ${TMPVER})
-  unset(TMPVER)
-  
+
+  # Unset temporal variables
+  unset(TMP_VERSION)
+  unset(TMP_NAME)
+  unset(TMP_PACKING)
+  unset(TMP_URL)
+
+  # Trilinos specific flags  
   set(BUILD_TRILINOS_C_FLAGS "-g -fPIC -O3")
   set(BUILD_TRILINOS_CXX_FLAGS "-g -fPIC -O3")
   set(BUILD_TRILINOS_F_FLAGS "-g -O3 -fallow-argument-mismatch")
@@ -19,8 +36,8 @@ macro(build_trilinos)
   build_cmake_git_subproject(
     NAME Trilinos
     VERSION ${BUILD_TRILINOS_VERSION}
-    GIT_REPO ${BUILD_TRILINOS_REPO}
-    GIT_TAG ${BUILD_TRILINOS_TAG}
+    URL ${BUILD_TRILINOS_URL}
+    URL_MD5 ${BUILD_TRILINOS_MD5}
     DOWNLOAD_ONLY ${DOWNLOAD_ONLY}
     BUILD_ARGS
       -D TPL_ENABLE_ParMETIS:BOOL=ON

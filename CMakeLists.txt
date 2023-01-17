@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.19) #minimum 3.19 for MUMPS
 
-project(dealii_superbuild VERSION 1.0.0 LANGUAGES Fortran C CXX)
+project(dcs VERSION 1.0.0 LANGUAGES Fortran C CXX)
 ################################################################################
 ##Policies includes and default variables                                     ##
 ################################################################################
@@ -11,7 +11,16 @@ include(ExternalProject)
 include(FetchContent)
 include(GNUInstallDirs)
 include(ProcessorCount)
+
+# Include our own macros
 add_subdirectory(macros)
+
+# Include the macros to build TPLS
+add_subdirectory(packages)
+
+# Include the macros to build applications
+add_subdirectory(applications)
+
 #set Install prefix to install subdirectory of build dir.
 if(NOT CMAKE_INSTALL_PREFIX)
   set(CMAKE_INSTALL_PREFIX
@@ -19,6 +28,7 @@ if(NOT CMAKE_INSTALL_PREFIX)
       CACHE STRING "Final install location." FORCE)
 endif()
 
+# Try to get the compiler
 if(NOT DEFINED MPI_C_COMPILER OR NOT DEFINED MPI_CXX_COMPILER OR NOT DEFINED MPI_Fortran_COMPILER)
   message("No specific MPI Compiler defined, searching the system")
   find_package(MPI)
@@ -35,6 +45,7 @@ if(NOT DEFINED MPI_C_COMPILER OR NOT DEFINED MPI_CXX_COMPILER OR NOT DEFINED MPI
     return()
   endif()
 endif()
+
 # If NUM_BUILD_JOBS not specified grab number of processors on machine
 # and leave 2 for tasks other than building. 
 # If this slows your machine too much try even fewer.
@@ -47,7 +58,10 @@ endif()
 set(NUM_BUILD_JOBS ${PROCESSOR_COUNT} CACHE STRING 
       "Number of build jobs '-j <n>'")
 
-set(DEFAULT_BUILD_COMMAND cmake --build . --config release -j ${NUM_BUILD_JOBS})
+set(CMAKE_BUILD_PARALLEL_LEVEL ${NUM_BUILD_JOBS})
+
+set(DEFAULT_BUILD_COMMAND cmake --build . --config release)
+
 
 ################################################################################
 ## USER SPECIFIED THIRD PARTY LIBRARIES AND APPLICATIONS                      ##
@@ -56,35 +70,43 @@ set(DEFAULT_BUILD_COMMAND cmake --build . --config release -j ${NUM_BUILD_JOBS})
 set(DOWNLOAD_ONLY FALSE) 
 set(INSTALL_TPLS "") #For safety reset this variable
 set(INSTALL_APPS "") #For safety reset this variable
-list(APPEND INSTALL_TPLS "hdf5")
 
 ##GEOMETRY/CAD PACKAGES
+#list(APPEND INSTALL_TPLS "assimp")
+#list(APPEND INSTALL_TPLS "gmsh")
 list(APPEND INSTALL_TPLS "opencascade")
-# list(APPEND INSTALL_TPLS "gmsh") 
-# list(APPEND INSTALL_TPLS "assimp") 
 
 ##Parallel Tools
 list(APPEND INSTALL_TPLS "p4est")
-list(APPEND INSTALL_TPLS "parmetis") 
- 
-##BLAS/LAPACK/ScaLAPACK Stack gets auto determined 
-list(APPEND INSTALL_TPLS "some_blas") #See README.md for further details
+list(APPEND INSTALL_TPLS "parmetis")
 
 ##Solvers/Linear Algebra
-list(APPEND INSTALL_TPLS "superlu_dist") 
+#list(APPEND INSTALL_TPLS "ginkgo") 
 list(APPEND INSTALL_TPLS "mumps")
-# list(APPEND INSTALL_TPLS "ginkgo") 
-# ##Parallel LA Packages
+list(APPEND INSTALL_TPLS "superlu_dist")
+
+##Parallel LA Packages
 list(APPEND INSTALL_TPLS "trilinos")
 
 ##Advanced Maths packages
-# list(APPEND INSTALL_TPLS "adolc") 
-# list(APPEND INSTALL_TPLS "arpack") 
-# list(APPEND INSTALL_TPLS "sundials")  
+#list(APPEND INSTALL_TPLS "adolc") 
+#list(APPEND INSTALL_TPLS "arpack") 
+#list(APPEND INSTALL_TPLS "sundials")  
 list(APPEND INSTALL_TPLS "symengine")
 
+##Output
+list(APPEND INSTALL_TPLS "hdf5")
+
+##BLAS/LAPACK/ScaLAPACK Stack gets auto determined 
+list(APPEND INSTALL_TPLS "some_blas") #See README.md for further details
+
 ##Applications using deal.II
-# list(APPEND INSTALL_APPS "aspect")
+#list(APPEND INSTALL_APPS "aspect")
+
+## Get Versions
+include(TLS_VERSIONS.cmake)
+
+
 ################################################################################
 ## ROUTINES FOR CHECKING AND BUILDING DEPENDENCIES OF DEAL_II                 ##
 ################################################################################
@@ -104,12 +126,15 @@ set_packages_and_dependencies()
 #this routine calls all build_<pkgname>() enabled by user or dependency
 build_packages()
  
+
 ###################################################################################
 ## DEALII ITSELF                                                                 ##
 ###################################################################################
-build_dealii(VERSION 9.4.0 MAIN TRUE)
-# build_dealii(VERSION 9.3.2)
-# build_dealii(VERSION 9.3.3)
+build_dealii(
+  VERSION ${DEALII_VERSION} 
+  MD5     ${DEALII_MD5}
+  MAIN    TRUE
+)
 
 
 ###################################################################################
@@ -117,7 +142,3 @@ build_dealii(VERSION 9.4.0 MAIN TRUE)
 ###################################################################################
 build_applications()
 print_config_summary()
-
-
-
-

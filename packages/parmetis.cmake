@@ -1,25 +1,35 @@
 macro(build_parmetis)
- set(oneValueArgs VERSION)
+  set(oneValueArgs VERSION MD5)
   cmake_parse_arguments(BUILD_PARMETIS "" "${oneValueArgs}" "" ${ARGN})
-  
-  if (NOT BUILD_PARMETIS_VERSION)
-    set(BUILD_PARMETIS_VERSION "4.0.3")
+
+  # Assamble the Download URL
+  set(TMP_NAME "parmetis-${BUILD_PARMETIS_VERSION}")
+  set(TMP_PACKING ".tar.gz")
+  set(TMP_URL "http://glaros.dtc.umn.edu/gkhome/fetch/sw/parmetis/")
+  set(BUILD_PARMETIS_URL "${TMP_URL}${TMP_NAME}${TMP_PACKING}")
+
+  # Assamble the Mirror (if provided)
+  if(DEFINED MIRROR) 
+    # overwrite the default packing, in case that the mirror uses a different format
+    if (NOT DEFINED MIRROR_PACKING)
+      set(TMP_MIRROR_PACKING TMP_PACKING)
+    else 
+      set(TMP_MIRROR_PACKING MIRROR_PACKING)
+    endif()
+
+    set(BUILD_PARMETIS_URL "${MIRROR}${TMP_NAME}${TMP_MIRROR_PACKING} ${BUILD_PARMETIS_URL}")
+    unset(TMP_MIRROR_PACKING)
   endif()
-  
-  set(BUILD_PARMETIS_MD5 "")
-  if (BUILD_PARMETIS_VERSION STREQUAL "4.0.3")
-    set(BUILD_PARMETIS_MD5 f69c479586bf6bb7aff6a9bc0c739628)
-  endif()
-  string(CONCAT BUILD_PARMETIS_URL "http://glaros.dtc.umn.edu/gkhome/fetch/sw/parmetis/parmetis-"
-  ${BUILD_PARMETIS_VERSION} ".tar.gz")
+
+  # Unset temporal variables
+  unset(TMP_NAME)
+  unset(TMP_PACKING)
+  unset(TMP_URL)
+
   
   setup_subproject_path_vars(ParMetis)    
     
-  if (NOT DEFINED BUILD_PARMETIS_VERSION)  
-    set(SUBPROJECT_INSTALL_PATH ${CMAKE_INSTALL_PREFIX})
-  else()
-    set(SUBPROJECT_INSTALL_PATH ${CMAKE_INSTALL_PREFIX}/ParMETIS-${BUILD_PARMETIS_VERSION})
-  endif()
+  set(SUBPROJECT_INSTALL_PATH ${CMAKE_INSTALL_PREFIX}/ParMETIS-${BUILD_PARMETIS_VERSION})
   if(DOWNLOAD_ONLY)
     ExternalProject_Add(ParMETIS
       URL ${BUILD_PARMETIS_URL}
