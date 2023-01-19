@@ -25,16 +25,16 @@ macro(build_dealii)
   # Assamble the Download URL
   set(TMP_NAME "dealii-${BUILD_DEALII_VERSION}")
   set(TMP_PACKING ".tar.gz")
-  set(TMP_URL "https://github.com/dealii/dealii/releases/download/${BUILD_DEALII_VERSION}/")
+  set(TMP_URL "https://github.com/dealii/dealii/releases/download/v${BUILD_DEALII_VERSION}/")
   set(BUILD_DEALII_URL "${TMP_URL}${TMP_NAME}${TMP_PACKING}")
 
   # Assamble the Mirror (if provided)
   if(DEFINED MIRROR) 
     # overwrite the default packing, in case that the mirror uses a different format
     if (NOT DEFINED MIRROR_PACKING)
-      set(TMP_MIRROR_PACKING TMP_PACKING)
-    else 
-      set(TMP_MIRROR_PACKING MIRROR_PACKING)
+      set(TMP_MIRROR_PACKING ${TMP_PACKING})
+    else()
+      set(TMP_MIRROR_PACKING ${MIRROR_PACKING})
     endif()
 
     set(BUILD_DEALII_URL "${MIRROR}${TMP_NAME}${TMP_MIRROR_PACKING} ${BUILD_DEALII_URL}")

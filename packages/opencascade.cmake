@@ -3,18 +3,18 @@ macro(build_opencascade)
   cmake_parse_arguments(BUILD_OCE "" "${oneValueArgs}" "" ${ARGN})
   
   # Assamble the Download URL
-  set(TMP_NAME "opencascade-${BUILD_OCE_VERSION}")
+  set(TMP_NAME "OCE-${BUILD_OCE_VERSION}")
   set(TMP_PACKING ".tar.gz")
-  set(TMP_URL "https://github.com/tpaviot/oce/releases/download/official-upstream-packages/")
+  set(TMP_URL "https://github.com/tpaviot/oce/archive/refs/tags/")
   set(BUILD_OCE_URL "${TMP_URL}${TMP_NAME}${TMP_PACKING}")
 
   # Assamble the Mirror (if provided)
   if(DEFINED MIRROR) 
     # overwrite the default packing, in case that the mirror uses a different format
     if (NOT DEFINED MIRROR_PACKING)
-      set(TMP_MIRROR_PACKING TMP_PACKING)
-    else 
-      set(TMP_MIRROR_PACKING MIRROR_PACKING)
+      set(TMP_MIRROR_PACKING ${TMP_PACKING})
+    else()
+      set(TMP_MIRROR_PACKING ${MIRROR_PACKING})
     endif()
 
     set(BUILD_OCE_URL "${MIRROR}${TMP_NAME}${TMP_MIRROR_PACKING} ${BUILD_OCE_URL}")

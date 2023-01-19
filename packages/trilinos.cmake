@@ -13,9 +13,9 @@ macro(build_trilinos)
   if(DEFINED MIRROR) 
     # overwrite the default packing, in case that the mirror uses a different format
     if (NOT DEFINED MIRROR_PACKING)
-      set(TMP_MIRROR_PACKING TMP_PACKING)
-    else 
-      set(TMP_MIRROR_PACKING MIRROR_PACKING)
+      set(TMP_MIRROR_PACKING ${TMP_PACKING})
+    else()
+      set(TMP_MIRROR_PACKING ${MIRROR_PACKING})
     endif()
 
     set(BUILD_TRILINOS_URL "${MIRROR}${TMP_NAME}${TMP_PACKING} ${BUILD_TRILINOS_URL}")
@@ -33,7 +33,7 @@ macro(build_trilinos)
   set(BUILD_TRILINOS_CXX_FLAGS "-g -fPIC -O3")
   set(BUILD_TRILINOS_F_FLAGS "-g -O3 -fallow-argument-mismatch")
   
-  build_cmake_git_subproject(
+  build_cmake_subproject(
     NAME Trilinos
     VERSION ${BUILD_TRILINOS_VERSION}
     URL ${BUILD_TRILINOS_URL}

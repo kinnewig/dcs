@@ -223,3 +223,8 @@ done
 for PACKAGE in ${PACKAGES[@]}; do
   sed -i "s/#list(APPEND INSTALL_TPLS \"${PACKAGE}\")/list(APPEND INSTALL_TPLS \"${PACKAGE}\")/g" CMakeLists.txt
 done
+
+
+# ++============================================================++
+# ||                Start the Installation                      ||
+# ++============================================================++

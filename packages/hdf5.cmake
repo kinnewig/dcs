@@ -14,9 +14,9 @@ macro(build_hdf5)
   if(DEFINED MIRROR) 
     # overwrite the default packing, in case that the mirror uses a different format
     if (NOT DEFINED MIRROR_PACKING)
-      set(TMP_MIRROR_PACKING TMP_PACKING)
-    else 
-      set(TMP_MIRROR_PACKING MIRROR_PACKING)
+      set(TMP_MIRROR_PACKING ${TMP_PACKING})
+    else()
+      set(TMP_MIRROR_PACKING ${MIRROR_PACKING})
     endif()
 
     set(BUILD_HDF5_URL "${MIRROR}${TMP_NAME}${TMP_MIRROR_PACKING} ${BUILD_HDF5_URL}")
