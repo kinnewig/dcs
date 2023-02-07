@@ -69,6 +69,7 @@ macro(build_dealii)
       -D CMAKE_POLICY_DEFAULT_CMP0057:STRING=NEW 
       -D CMAKE_POLICY_DEFAULT_CMP0074:STRING=NEW
       ${DEALII_CONFOPTS}
+    DEPENDS_ON opencascade p4est parmetis mumps superlu_dist trilinos symengine hdf5
   )
   if(BUILD_DEALII_MAIN)
     set(MAIN_DEAL_II dealii-${BUILD_DEALII_VERSION})
