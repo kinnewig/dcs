@@ -1,11 +1,11 @@
-cmake_minimum_required(VERSION 3.19) #minimum 3.19 for MUMPS
+cmake_minimum_required(VERSION 3.24) #minimum 3.19 for MUMPS
 
 project(dcs VERSION 1.0.0 LANGUAGES Fortran C CXX)
 ################################################################################
 ##Policies includes and default variables                                     ##
 ################################################################################
 cmake_policy(SET CMP0057 NEW)
-cmake_policy(SET CMP0135 NEW) 
+cmake_policy(SET CMP0135 NEW)  #<-- Requires CMake Verision > 3.24
 
 include(ExternalProject)
 include(FetchContent)
@@ -58,9 +58,13 @@ endif()
 set(NUM_BUILD_JOBS ${PROCESSOR_COUNT} CACHE STRING 
       "Number of build jobs '-j <n>'")
 
-set(CMAKE_BUILD_PARALLEL_LEVEL ${NUM_BUILD_JOBS})
-
-set(DEFAULT_BUILD_COMMAND cmake --build . --config release)
+# Remark: CMAKE_BUILD_PARALLEL_LEVEL only defines the maximum number of parallel jobs, 
+#         therfore this line is not usefull
+#set(CMAKE_BUILD_PARALLEL_LEVEL ${NUM_BUILD_JOBS})
+if(NOT DEFINED THREAD_COUNT)
+  set(THREAD_COUNT "1")
+endif()
+set(DEFAULT_BUILD_COMMAND cmake --build . --config release --parallel ${THREAD_COUNT})
 
 
 ################################################################################

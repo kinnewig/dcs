@@ -12,9 +12,9 @@ macro(build_parmetis)
   if(DEFINED MIRROR) 
     # overwrite the default packing, in case that the mirror uses a different format
     if (NOT DEFINED MIRROR_PACKING)
-      set(TMP_MIRROR_PACKING TMP_PACKING)
-    else 
-      set(TMP_MIRROR_PACKING MIRROR_PACKING)
+      set(TMP_MIRROR_PACKING ${TMP_PACKING})
+    else()
+      set(TMP_MIRROR_PACKING ${MIRROR_PACKING})
     endif()
 
     set(BUILD_PARMETIS_URL "${MIRROR}${TMP_NAME}${TMP_MIRROR_PACKING} ${BUILD_PARMETIS_URL}")
@@ -70,8 +70,8 @@ macro(build_parmetis)
       UPDATE_DISCONNECTED true
       DOWNLOAD_EXTRACT_TIMESTAMP TRUE
       CONFIGURE_HANDLED_BY_BUILD true
-      CONFIGURE_COMMAND cmake -S. -Bbuild ${PARMETIS_CONFOPTS}
-      BUILD_COMMAND cmake --build build
+      CONFIGURE_COMMAND cmake -S . -B build ${PARMETIS_CONFOPTS}
+      BUILD_COMMAND cmake --build build --parallel ${THREAD_COUNT}
       INSTALL_COMMAND cmake --install build
       STAMP_DIR ${SUBPROJECT_STAMP_PATH}
       SOURCE_DIR ${SUBPROJECT_SOURCE_PATH}

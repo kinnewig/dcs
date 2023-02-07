@@ -26,7 +26,7 @@ set(OPENCASCADE_MD5 "1686393c8493bbbb2f3f242330b33cba")
 ##############################################################################
 # p4est
 set(P4EST_VERSION "2.3.2")
-set(P4EST_MD5 "edb4da9d5948ed6f290475e26f1a746c")
+set(P4EST_MD5 "0ea6e4806b6950ad64e62a5607bfabbb")
 
 # parmetis
 set(PARMETIS_VERSION "4.0.3")
@@ -83,3 +83,8 @@ set(SUNDIALS_MD5 "483784dab433f178e79072bbed98c38c")
 # symengine
 set(SYMENGINE_VERSION "0.8.1")
 set(SYMENGINE_MD5 "967b913b365eda9fb30ecb3f1ded46f2")
+
+
+# HDF5
+set(HDF5_VERSION "1.10.8")
+set(HDF5_MD5 "4a381a82ee16b1318b138ec3c40b2482")
