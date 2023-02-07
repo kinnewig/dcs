@@ -59,8 +59,8 @@ macro(build_cmake_subproject)
   )
 
   if(BUILD_SUBPROJECT_DEPENDS_ON)
-    ExternalProject_Add_StepDependencies(${SUBPROJECT_NAME}
-      configure ${BUILD_SUBPROJECT_DEPENDS_ON}
+    ExternalProject_Add_StepDependencies(
+      ${SUBPROJECT_NAME} install ${BUILD_SUBPROJECT_DEPENDS_ON}
     )
   endif()
   
