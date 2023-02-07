@@ -33,7 +33,7 @@ macro(build_p4est)
   set(p4est_fast_flags --prefix=${P4EST_INSTALL_PATH}/FAST CFLAGS=-O2)
   set(p4est_debug_flags --prefix=${P4EST_INSTALL_PATH}/DEBUG CFLAGS=-O0)
   set(p4est_enable_flags --enable-shared --disable-vtk-binary --without-blas --enable-mpi)
-  set(p4est_compile_flags CPPFLAGS=-DSC_LOG_PRIORITY=SC_LP_ESSENTIAL F77=mpif77 )
+  set(p4est_compile_flags F77=mpifort )
 
   if(DOWNLOAD_ONLY)
     ExternalProject_Add(
