@@ -83,6 +83,7 @@ list(APPEND INSTALL_TPLS "opencascade")
 ##Parallel Tools
 list(APPEND INSTALL_TPLS "p4est")
 list(APPEND INSTALL_TPLS "parmetis")
+list(APPEND INSTALL_TPLS "scalapack")
 
 ##Solvers/Linear Algebra
 #list(APPEND INSTALL_TPLS "ginkgo") 
@@ -96,7 +97,7 @@ list(APPEND INSTALL_TPLS "trilinos")
 #list(APPEND INSTALL_TPLS "adolc") 
 #list(APPEND INSTALL_TPLS "arpack") 
 #list(APPEND INSTALL_TPLS "sundials")  
-list(APPEND INSTALL_TPLS "symengine")
+#list(APPEND INSTALL_TPLS "symengine")
 
 ##Output
 list(APPEND INSTALL_TPLS "hdf5")
