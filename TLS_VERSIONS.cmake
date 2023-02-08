@@ -41,8 +41,8 @@ set(OPENBLAS_VERSION "0.3.13")
 set(OPENBLAS_MD5 "2ca05b9cee97f0d1a8ab15bd6ea2b747")
 
 # ScaLAPACK
-set(SCALAPACK_VERSION "2.1.0")
-set(SCALAPACK_MD5 "e9ae970238030fa1e8ee022a9d3e6fbb")
+set(SCALAPACK_VERSION "2.2.1.4")
+set(SCALAPACK_MD5 "788c25fe6e437eeb913ee89cf9433d7e")
 
 
 ##############################################################################
@@ -53,16 +53,16 @@ set(GINKO_VERSION "1.4.0")
 set(GINKO_MD5 "d7ff9d564f8ca96b9ad33621821aff48")
 
 # mumps
-set(MUMPS_VERSION "5.4.0.5")
-set(MUMPS_MD5 "0cd3bd9ad9860f7c0092cd561931a36e")
+set(MUMPS_VERSION "5.5.1.11")
+set(MUMPS_MD5 "ea9d97276023a4ea8adce591f7c15a3a")
 
 # superlu_dist
 set(SUPERLU_DIST_VERSION "5.1.2")
 set(SUPERLU_MD5 "0a99bbb5f6c26a9c1d7ab17ea35d4e6f")
 
 # trilinos
-set(TRILINOS_VERSION "12-18-1")
-set(TRILINOS_MD5 "9c1d151169949bca6cf203831e4d6aee")
+set(TRILINOS_VERSION "13.4.1")
+set(TRILINOS_MD5 "8f26e97d92a9d91affadc54896a0ec77")
 
 
 ##############################################################################
