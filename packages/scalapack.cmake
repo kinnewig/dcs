@@ -1,16 +1,15 @@
 macro(build_scalapack)
-
   set(oneValueArgs VERSION MD5)
   cmake_parse_arguments(BUILD_SCALAPACK "" "${oneValueArgs}" "" ${ARGN})
 
-  if(${INSTALL_reference_scalapack})
+  #if(${INSTALL_reference_scalapack})
     set(BUILD_SCALAPACK_C_FLAGS "-g -fPIC -O3")
     set(BUILD_SCALAPACK_F_FLAGS "-fallow-argument-mismatch")
 
     # Assamble the Download URL
     set(TMP_NAME "v${BUILD_SCALAPACK_VERSION}")
     set(TMP_PACKING ".tar.gz")
-    set(TMP_URL "https://github.com/Reference-ScaLAPACK/scalapack/archive/refs/tags/")
+    set(TMP_URL "https://github.com/scivision/scalapack/archive/refs/tags/")
     set(BUILD_SCALAPACK_URL "${TMP_URL}${TMP_NAME}${TMP_PACKING}")
   
     # Assamble the Mirror (if provided)
@@ -32,9 +31,10 @@ macro(build_scalapack)
     unset(TMP_URL)
 
     
-  elseif(${INSTALL_amd_scalapack})
+  #elseif(${INSTALL_amd_scalapack})
     #TODO
-  endif()
+  #endif()
+
 
   # Build ScaLAPACK
   build_cmake_subproject(
