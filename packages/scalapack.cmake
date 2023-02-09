@@ -2,6 +2,7 @@ macro(build_scalapack)
   set(oneValueArgs VERSION MD5)
   cmake_parse_arguments(BUILD_SCALAPACK "" "${oneValueArgs}" "" ${ARGN})
 
+  # TODO: Add option to install AMD ScaLAPACK
   #if(${INSTALL_reference_scalapack})
     set(BUILD_SCALAPACK_C_FLAGS "-g -fPIC -O3")
     set(BUILD_SCALAPACK_F_FLAGS "-fallow-argument-mismatch")
@@ -53,15 +54,21 @@ macro(build_scalapack)
       -D CMAKE_POSITION_INDEPENDENT_CODE:BOOL=ON
       -D BLAS_LIBRARY_DIRS:STRING=${BLAS_DIR}
       -D LAPACK_LIBRARY_DIRS:STRING=${BLAS_DIR}
-    DEPENDS_ON ${BLAS_PROJECT_NAME}
+    DEPENDS_ON ${SCALAPACK_DEPENDENCIES}
   )
   
   set(BLACS_DIR=${ScaLAPACK_DIR}/lib)
   
+  # Configure deal.II to use ScaLAPACK
   list(APPEND DEALII_CONFOPTS "-D DEAL_II_WITH_SCALAPACK:BOOL=ON")
   list(APPEND DEALII_CONFOPTS "-D SCALAPACK_DIR=${ScaLAPACK_DIR}")
 
+  # Configure Trilinos to use ScaLAPACK
   list(APPEND TRILINOS_DEPENDENCIES "ScaLAPACK")
   list(APPEND TRILINOS_CONFOPTS "-D TPL_ENABLE_SCALAPACK:BOOL=ON")
   list(APPEND TRILINOS_CONFOPTS "-D SCALAPACK_LIBRARY_DIRS:PATH=${ScaLAPACK_DIR}/lib")
+
+  # Configure MUMPS to use ScaLAPACK
+  list(APPEND MUMPS_DEPENDENCIES "ScaLAPACK")
+  list(APPEND MUMPS_CONFOPTS "-D pc_scalapack_LIBRARY_DIRS=${ScaLAPACK_DIR}/lib")
 endmacro()

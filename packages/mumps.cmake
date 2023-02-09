@@ -1,17 +1,7 @@
 macro(build_mumps)
   set(oneValueArgs VERSION MD5)
   cmake_parse_arguments(BUILD_MUMPS "" "${oneValueArgs}" "" ${ARGN})
-  
-  if (BLAS_TYPE STREQUAL "IntelMKL")
-    set(MUMPS_BLAS_OPTS -D MKLROOT=${MKL_ROOT})
-  elseif( BLAS_TYPE STREQUAL "OpenBLAS")
-    set(MUMPS_BLAS_OPTS 
-      -D pc_blas_LIBRARY_DIRS=${BLAS_DIR}/lib
-      -D pc_lapack_LIBRARY_DIRS=${BLAS_DIR}/lib
-      -D pc_scalapack_LIBRARY_DIRS=${ScaLAPACK_DIR}/lib
-    )
-  endif()
-  
+
   # Assamble the Download URL
   set(TMP_NAME "v${BUILD_MUMPS_VERSION}")
   set(TMP_PACKING ".tar.gz")
@@ -35,6 +25,11 @@ macro(build_mumps)
   unset(TMP_NAME)
   unset(TMP_PACKING)
   unset(TMP_URL)
+
+  # Overwrite MUMPS_CONFOPTS in order to use IntelMKL
+  if (BLAS_TYPE STREQUAL "IntelMKL")
+    set(MUMPS_CONFOPTS -D MKLROOT=${MKL_ROOT})
+  endif()
 
   set(BUILD_MUMPS_C_FLAGS "-g -fPIC -O3")
   set(BUILD_MUMPS_F_FLAGS "-fallow-argument-mismatch")
@@ -70,7 +65,6 @@ macro(build_mumps)
       -D METIS_LIBRARY=${METIS_LIB}
       -D METIS_INCLUDE_DIR=${ParMETIS_INCLUDES}
       -D PARMETIS_LIBRARY=${ParMETIS_LIB}
-      ${MUMPS_BLAS_OPTS}
       -D CMAKE_Fortran_COMPILER=mpif90
       -D CMAKE_C_COMPILER=${CMAKE_MPI_C_COMPILER}
       -D CMAKE_CXX_COMPILER=${CMAKE_MPI_CXX_COMPILER}
@@ -79,9 +73,11 @@ macro(build_mumps)
       -D CMAKE_POSITION_INDEPENDENT_CODE:BOOL=ON
       -D BUILD_SHARED_LIBS:BOOL=ON
       -D CMAKE_POLICY_DEFAULT_CMP0135:STRING=NEW
-    DEPENDS_ON ScaLAPACK ParMETIS
+      ${MUMPS_CONFOPTS}
+      DEPENDS_ON ${MUMPS_DEPENDENCIES} ParMETIS
   )
 
+  # Configure Trilinos to use MUMPS
   list(APPEND TRILINOS_DEPENDENCIES "MUMPS")
   list(APPEND TRILINOS_CONFOPTS "-D TPL_ENABLE_MUMPS:BOOL=ON")
   list(APPEND TRILINOS_CONFOPTS "-D MUMPS_LIBRARY_DIRS:PATH=${MUMPS_DIR}/lib")

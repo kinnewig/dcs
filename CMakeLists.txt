@@ -80,6 +80,9 @@ set(INSTALL_APPS "") #For safety reset this variable
 #list(APPEND INSTALL_TPLS "gmsh")
 list(APPEND INSTALL_TPLS "opencascade")
 
+## Basic Linear Algebra
+list(APPEND INSTALL_TPLS "openblas")
+
 ##Parallel Tools
 list(APPEND INSTALL_TPLS "p4est")
 list(APPEND INSTALL_TPLS "parmetis")
@@ -90,7 +93,7 @@ list(APPEND INSTALL_TPLS "scalapack")
 list(APPEND INSTALL_TPLS "mumps")
 list(APPEND INSTALL_TPLS "superlu_dist")
 
-##Parallel LA Packages
+##Parallel Linear Algebra Packages
 list(APPEND INSTALL_TPLS "trilinos")
 
 ##Advanced Maths packages
@@ -101,9 +104,6 @@ list(APPEND INSTALL_TPLS "trilinos")
 
 ##Output
 list(APPEND INSTALL_TPLS "hdf5")
-
-##BLAS/LAPACK/ScaLAPACK Stack gets auto determined 
-list(APPEND INSTALL_TPLS "some_blas") #See README.md for further details
 
 ##Applications using deal.II
 #list(APPEND INSTALL_APPS "aspect")
