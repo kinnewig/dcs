@@ -58,7 +58,7 @@ macro(build_scalapack)
     DEPENDS_ON ${SCALAPACK_DEPENDENCIES}
   )
   
-  set(BLACS_DIR=${ScaLAPACK_DIR}/lib)
+  list(APPEND CMAKE_PREFIX_PATH "${ScaLAPACK_DIR}")
   
   # Configure deal.II to use ScaLAPACK
   list(APPEND DEALII_CONFOPTS "-D DEAL_II_WITH_SCALAPACK:BOOL=ON")
@@ -71,5 +71,4 @@ macro(build_scalapack)
 
   # Configure MUMPS to use ScaLAPACK
   list(APPEND MUMPS_DEPENDENCIES "ScaLAPACK")
-  list(APPEND MUMPS_CONFOPTS "-D pc_scalapack_LIBRARY_DIRS=${SCALAPACK_DIR}/lib64")
 endmacro()

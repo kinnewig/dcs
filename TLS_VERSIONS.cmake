@@ -53,10 +53,10 @@ set(GINKO_VERSION "1.4.0")
 set(GINKO_MD5 "d7ff9d564f8ca96b9ad33621821aff48")
 
 # mumps
-set(MUMPS_VERSION "5.4.0.5")
-set(MUMPS_MD5 "0cd3bd9ad9860f7c0092cd561931a36e")
-#set(MUMPS_VERSION "5.5.1.11")# <--removed possibility to provide Pathes for ScaLAPACK
-#set(MUMPS_MD5 "ea9d97276023a4ea8adce591f7c15a3a")
+#set(MUMPS_VERSION "5.4.0.5")
+#set(MUMPS_MD5 "0cd3bd9ad9860f7c0092cd561931a36e")
+set(MUMPS_VERSION "5.5.1.11")# <--removed possibility to provide Pathes for ScaLAPACK
+set(MUMPS_MD5 "ea9d97276023a4ea8adce591f7c15a3a")
 
 # superlu_dist
 set(SUPERLU_DIST_VERSION "5.1.2")
