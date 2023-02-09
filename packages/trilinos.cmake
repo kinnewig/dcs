@@ -22,6 +22,11 @@ macro(build_trilinos)
     unset(TMP_MIRROR_PACKING)
   endif()
 
+  # ParMETIS
+  list(APPEND TRILINOS_CONFOPTS "-D TPL_ENABLE_ParMETIS:BOOL=ON")
+  list(APPEND TRILINOS_CONFOPTS "-D TPL_ParMETIS_LIBRARIES:FILEPATH=${ParMETIS_LIB};${METIS_LIB}")
+  list(APPEND TRILINOS_CONFOPTS "-D TPL_ParMETIS_INCLUDE_DIRS:PATH=${ParMETIS_INCLUDES}")
+
   # Unset temporal variables
   unset(TMP_VERSION)
   unset(TMP_NAME)
@@ -40,21 +45,18 @@ macro(build_trilinos)
     URL_MD5 ${BUILD_TRILINOS_MD5}
     DOWNLOAD_ONLY ${DOWNLOAD_ONLY}
     BUILD_ARGS
-      -D TPL_ENABLE_ParMETIS:BOOL=ON
-      -D TPL_ParMETIS_LIBRARIES:FILEPATH=${ParMETIS_LIB};${METIS_LIB}
-      -D TPL_ParMETIS_INCLUDE_DIRS:PATH=${ParMETIS_INCLUDES}
       -D TPL_ENABLE_MPI:BOOL=ON 
       -D Trilinos_ENABLE_OpenMP:BOOL=OFF 
-      -D TPL_ENABLE_TBB:BOOL=OFF
-      -D Trilinos_VERBOSE_CONFIGURE:BOOL=OFF
-      -D Trilinos_ENABLE_EXPLICIT_INSTANTIATION=ON
+      -D TPL_ENABLE_TBB:BOOL=OFF 
+      -D Trilinos_VERBOSE_CONFIGURE:BOOL=OFF 
+      -D Trilinos_ENABLE_EXPLICIT_INSTANTIATION=ON 
       -D Trilinos_ENABLE_Amesos:BOOL=ON 
-      -D Trilinos_ENABLE_Epetra:BOOL=ON 
+      -D Trilinos_ENABLE_Epetra:BOOL=ON
       -D Trilinos_ENABLE_EpetraExt:BOOL=ON 
       -D Trilinos_ENABLE_Ifpack:BOOL=ON 
       -D Trilinos_ENABLE_Ifpack2:BOOL=OFF 
       -D Trilinos_ENABLE_Tpetra:BOOL=ON 
-      -D   Tpetra_INST_INT_LONG_LONG:BOOL=ON
+      -D   Tpetra_INST_INT_LONG_LONG:BOOL=ON 
       -D Trilinos_ENABLE_AztecOO:BOOL=ON 
       -D Trilinos_ENABLE_Sacado:BOOL=ON 
       -D Trilinos_ENABLE_Teuchos:BOOL=ON 
@@ -69,7 +71,6 @@ macro(build_trilinos)
       -D Trilinos_ENABLE_Amesos2:BOOL=ON 
       -D TPL_ENABLE_Matio=OFF 
       -D CMAKE_BUILD_TYPE:STRING=RELEASE 
-      -D CMAKE_VERBOSE_MAKEFILE:BOOL=OFF 
       -D BUILD_SHARED_LIBS:BOOL=ON 
       -D CMAKE_Fortran_COMPILER=${CMAKE_MPI_FC_COMPILER}
       -D CMAKE_C_COMPILER=${CMAKE_MPI_C_COMPILER}
