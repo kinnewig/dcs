@@ -61,11 +61,11 @@ macro(build_trilinos)
       -D Trilinos_ENABLE_Sacado:BOOL=ON 
       -D Trilinos_ENABLE_Teuchos:BOOL=ON 
       -D   Teuchos_ENABLE_FLOAT:BOOL=ON 
-      -D Trilinos_ENABLE_MueLu:BOOL=OFF
+      -D Trilinos_ENABLE_MueLu:BOOL=OFF #<- Is not compatible with deal.II and Trilinos >= 13.0.0
       -D Trilinos_ENABLE_ML:BOOL=ON 
       -D Trilinos_ENABLE_ROL:BOOL=ON 
       -D Trilinos_ENABLE_Zoltan:BOOL=ON 
-      -D Trilinos_ENABLE_Stratimikos:BOOL=ON 
+      -D Trilinos_ENABLE_Stratimikos:BOOL=OFF #<- Produces a Linking Error, for what is that even used?
       -D TPL_ENABLE_Boost:BOOL=OFF 
       -D Trilinos_ENABLE_Belos:BOOL=ON 
       -D Trilinos_ENABLE_Amesos2:BOOL=ON 

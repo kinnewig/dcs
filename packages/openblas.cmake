@@ -38,16 +38,17 @@ macro(build_openblas)
       -D CMAKE_Fortran_COMPILER=${CMAKE_Fortran_COMPILER}
   )
 
-  set(BLAS_LIBS ${OpenBLAS_DIR}/lib64/libopenblas${CMAKE_SHARED_LIBRARY_SUFFIX})
-  set(LAPACK_LIBS ${BLAS_LIBS})
-  set(BLAS_DIR ${OpenBLAS_DIR})
+  #set(BLAS_LIBS ${OpenBLAS_DIR}/lib64/libopenblas${CMAKE_SHARED_LIBRARY_SUFFIX})
+  #set(LAPACK_LIBS ${BLAS_LIBS})
+  #set(BLAS_DIR ${OpenBLAS_DIR})
   set(BLAS_PROJECT_NAME OpenBLAS)
 
-  list(APPEND CMAKE_PREFIX_PATH "${OpenBLAS_DIR}/lib64")
+  list(APPEND CMAKE_PREFIX_PATH "${OpenBLAS_DIR}")
   
   # Configure deal.II to use OpenBLAS
   list(APPEND DEALII_DEPENDENCIES "OpenBLAS")
-  list(APPEND DEALII_CONFOPTS "-D LAPACK_LIBRARIES=${OpenBLAS_DIR}/lib64")
+  list(APPEND DEALII_CONFOPTS "-D LAPACK_LIBRARIES=${OpenBLAS_DIR}/lib64/libopenblas${CMAKE_SHARED_LIBRARY_SUFFIX}")
+  list(APPEND DEALII_CONFOPTS "-D LAPACK_INCLUDES=${OpenBLAS_DIR}/include")
 
   # Configure Trilinos to use OpenBLAS
   list(APPEND TRILINOS_DEPENDENCIES "OpenBLAS")
