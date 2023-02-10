@@ -64,8 +64,13 @@ set(NUM_BUILD_JOBS ${PROCESSOR_COUNT} CACHE STRING
 if(NOT DEFINED THREAD_COUNT)
   set(THREAD_COUNT "1")
 endif()
-set(DEFAULT_BUILD_COMMAND cmake --build . --config release --parallel ${THREAD_COUNT})
+#set(DEFAULT_BUILD_COMMAND cmake --build . --config release --parallel ${THREAD_COUNT})
 
+if("${CMAKE_SYSTEM_NAME}" STREQUAL "Linux")
+  set(DEFAULT_BUILD_COMMAND "$(MAKE)" )
+else()
+  set(DEFAULT_BUILD_COMMAND cmake --build . --config release) 
+endif()
 
 ################################################################################
 ## USER SPECIFIED THIRD PARTY LIBRARIES AND APPLICATIONS                      ##
