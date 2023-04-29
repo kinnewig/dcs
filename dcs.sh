@@ -3,7 +3,12 @@ set -a
 
 # Set default values
 PREFIX=~/dealii
+BUILD=dealii_build
 USER_INTERACTION=ON
+
+# Default number of threads
+THREADS=$(($(nproc)-2))
+
 
 while [ -n "$1" ]; do
   param="$1"
@@ -13,10 +18,12 @@ while [ -n "$1" ]; do
     -h|--help)
       echo "deal.II CMake SuberBuild, Version $(cat VERSION)"
       echo "Usage: $0 [options]"
-      echo "  -h, --help                  Print this message"
-      echo "  -p <path>, --prefix=<path>  Set a different prefix path (default $PREFIX)"
-      echo "  -U                          Do not interupt (TODO)"
-      echo "  -v, --version               Print the version number"
+      echo "  -h, --help                   Print this message"
+      echo "  -p <path>, --prefix=<path>   Set a different prefix path (default ${PREFIX})"
+      echo "  -b <path>, --build=<path>    Set a different build path (default ${BUILD})"
+      echo "  -j <path>, --parallel=<path> Set number of threads to use (default ${THREADS})"
+      echo "  -U                           Do not interupt (TODO)"
+      echo "  -v, --version                Print the version number"
       exit 0
     ;;
 
@@ -28,6 +35,24 @@ while [ -n "$1" ]; do
       -p=*|--prefix=*)
       PREFIX="${param#*=}"
     ;;
+    
+    # Build path
+    -b)
+      shift
+      BUILD="${1}"
+    ;;
+      -b=*|--build=*)
+      BUILD="${param#*=}"
+    ;;
+
+    # Threads
+    -j)
+      shift
+      THREADS="${1}"
+    ;;
+      -j=*|--parallel=*)
+      THREADS="${param#*=}"
+    ;;    
 
     # Version
     -v|--version)
@@ -147,6 +172,8 @@ guess_platform() {
 }
 
 
+
+
 # ++============================================================++
 # ||                      User interaction                      ||
 # ++============================================================++
@@ -228,3 +255,18 @@ done
 # ++============================================================++
 # ||                Start the Installation                      ||
 # ++============================================================++
+
+# set enviroment (TODO: needs to be improved)
+echo CC=gcc
+echo CXX=g++
+echo FC=gfortran
+echo FF=gfortran
+echo MPI_CC=mpicc
+echo MPI_CXX=mpicxx
+echo MPI_FC=mpifort
+echo MPI_FF=mpifort
+
+# TODO Mirror: -D MIRROR=http://distribution.ifam.uni-hannover.de/ASBT/DEAL/candi/V7/
+
+cmake -S . -B ${BUILD} -D CMAKE_INSTALL_PREFIX=${PREFIX} -D THREAD_COUNT=${THREADS}
+cmake --build ${BUILD} --parallel ${THREADS}

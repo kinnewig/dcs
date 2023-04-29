@@ -1,8 +1,8 @@
 ##############################################################################
 ##  GEOMETRY/CAD PACKAGES                                                   ##
 ##############################################################################
-set(DEALII_VERSION "9.4.1")
-set(DEALII_MD5     "9f03b2e019675a7a94626866dc272a31")
+set(DEALII_VERSION "9.4.2")
+set(DEALII_MD5     "91075c719c44652b9749d29663e31090")
 
 
 ##############################################################################
@@ -63,8 +63,8 @@ set(SUPERLU_DIST_VERSION "5.1.2")
 set(SUPERLU_MD5 "0a99bbb5f6c26a9c1d7ab17ea35d4e6f")
 
 # trilinos
-set(TRILINOS_VERSION "13.4.1")
-set(TRILINOS_MD5 "8f26e97d92a9d91affadc54896a0ec77")
+set(TRILINOS_VERSION "14.0.0")
+set(TRILINOS_MD5 "d41d8cd98f00b204e9800998ecf8427e")
 
 
 ##############################################################################
@@ -83,8 +83,8 @@ set(SUNDIALS_VERSION "5.7.0")
 set(SUNDIALS_MD5 "483784dab433f178e79072bbed98c38c")
 
 # symengine
-set(SYMENGINE_VERSION "0.8.1")
-set(SYMENGINE_MD5 "967b913b365eda9fb30ecb3f1ded46f2")
+set(SYMENGINE_VERSION "0.10.1")
+set(SYMENGINE_MD5 "4673c85b423241ce85a9df35a7ed61bb")
 
 
 # HDF5
