@@ -5,6 +5,7 @@ set(DEALII_VERSION "9.4.2")
 set(DEALII_MD5     "91075c719c44652b9749d29663e31090")
 
 
+
 ##############################################################################
 ##  GEOMETRY/CAD PACKAGES                                                   ##
 ##############################################################################
@@ -63,8 +64,10 @@ set(SUPERLU_DIST_VERSION "5.1.2")
 set(SUPERLU_MD5 "0a99bbb5f6c26a9c1d7ab17ea35d4e6f")
 
 # trilinos
-set(TRILINOS_VERSION "14.0.0")
-set(TRILINOS_MD5 "d41d8cd98f00b204e9800998ecf8427e")
+#set(TRILINOS_VERSION "14.0.0")
+#set(TRILINOS_MD5 "d41d8cd98f00b204e9800998ecf8427e")
+set(TRILINOS_VERSION "13.4.1")
+set(TRILINOS_MD5 "8f26e97d92a9d91affadc54896a0ec77")
 
 
 ##############################################################################

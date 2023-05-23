@@ -108,7 +108,7 @@ list(APPEND INSTALL_TPLS "trilinos")
 #list(APPEND INSTALL_TPLS "symengine")
 
 ##Output
-list(APPEND INSTALL_TPLS "hdf5")
+#list(APPEND INSTALL_TPLS "hdf5")
 
 ##Applications using deal.II
 #list(APPEND INSTALL_APPS "aspect")
@@ -120,15 +120,18 @@ include(TLS_VERSIONS.cmake)
 ################################################################################
 ## ROUTINES FOR CHECKING AND BUILDING DEPENDENCIES OF DEAL_II                 ##
 ################################################################################
+
+# Sadly this seems to be extrem buggy...
 #Fetch cpu info cmake project and use get cpu info from there
-message("checking for cpu vendor")
-FetchContent_Declare(
-  CmakeCpuDetection
-  GIT_REPOSITORY https://github.com/scivision/cmake-cpu-detect.git
-  GIT_TAG 2e4e56500383e5483f64deeb48e1c9935d8975a0
-)
-FetchContent_MakeAvailable(CmakeCpuDetection)
-GetHostCPUInfo()
+#message("checking for cpu vendor")
+#FetchContent_Declare(
+#  CmakeCpuDetection
+#  GIT_REPOSITORY https://github.com/scivision/cmake-cpu-detect.git
+#  GIT_TAG 2e4e56500383e5483f64deeb48e1c9935d8975a0
+#)
+#FetchContent_MakeAvailable(CmakeCpuDetection)
+#GetHostCPUInfo()
+
 # set INSTALL_<pkgname> to TRUE for all packages in INSTALL_TPLS
 # and check for package dependencies
 set_packages_and_dependencies()
