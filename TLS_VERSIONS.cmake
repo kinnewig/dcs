@@ -66,10 +66,10 @@ set(SUPERLU_DIST_VERSION "5.1.2")
 set(SUPERLU_MD5 "0a99bbb5f6c26a9c1d7ab17ea35d4e6f")
 
 # trilinos
-#set(TRILINOS_VERSION "14.0.0")
-#set(TRILINOS_MD5 "d41d8cd98f00b204e9800998ecf8427e")
-set(TRILINOS_VERSION "13.4.1")
-set(TRILINOS_MD5 "8f26e97d92a9d91affadc54896a0ec77")
+set(TRILINOS_VERSION "14.2.0")
+set(TRILINOS_MD5 "ca08601791d1c301473a0cde6c047c2e")
+#set(TRILINOS_VERSION "13.4.1")
+#set(TRILINOS_MD5 "8f26e97d92a9d91affadc54896a0ec77")
 
 
 ##############################################################################
