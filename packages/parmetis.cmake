@@ -107,9 +107,15 @@ macro(build_parmetis)
   set(ParMETIS_LIB ${ParMETIS_DIR}/lib/libparmetis${CMAKE_SHARED_LIBRARY_SUFFIX})
   set(METIS_LIB ${ParMETIS_DIR}/lib/libmetis${CMAKE_SHARED_LIBRARY_SUFFIX})
   set(ParMETIS_INCLUDES ${ParMETIS_DIR}/include)
+
+  # Configure deal.II to use ParMETIS
   list(APPEND DEALII_DEPENDENCIES "ParMETIS")
   list(APPEND DEALII_CONFOPTS "-D DEAL_II_WITH_METIS:BOOL=ON")
   list(APPEND DEALII_CONFOPTS "-D METIS_DIR=${ParMETIS_DIR}")
   
+  # Configure MUMPS to use ParMETIS
+  list(APPEND MUMPS_DEPENDENCIES "ParMETIS")
+  list(APPEND MUMPS_CONFOPTS "-D metis=true")
+  list(APPEND MUMPS_CONFOPTS "-D USER_PROVIDED_PARMETIS_DIR=${ParMETIS_DIR}")
 endmacro()
 

@@ -5,7 +5,7 @@ macro(build_mumps)
   # Assamble the Download URL
   set(TMP_NAME "v${BUILD_MUMPS_VERSION}")
   set(TMP_PACKING ".tar.gz")
-  set(TMP_URL "https://github.com/scivision/mumps/archive/refs/tags/")
+  set(TMP_URL "https://github.com/kinnewig/mumps/archive/refs/tags/")
   set(BUILD_MUMPS_URL "${TMP_URL}${TMP_NAME}${TMP_PACKING}")
 
   # Assamble the Mirror (if provided)
@@ -29,6 +29,12 @@ macro(build_mumps)
   # Overwrite MUMPS_CONFOPTS in order to use IntelMKL
   if (BLAS_TYPE STREQUAL "IntelMKL")
     set(MUMPS_CONFOPTS -D MKLROOT=${MKL_ROOT})
+  endif()
+
+  # If AOCL is enabled, we also need to tell MUMPS to use the corresponding libraries
+  if (AOCL)
+    list(APPEND MUMPS_CONFOPTS -D AOCL:BOOL=ON)
+    # TODO: Check that aocl-blis and aocl-libflame are available
   endif()
 
   set(BUILD_MUMPS_C_FLAGS "-g -fPIC -O3")
@@ -61,10 +67,6 @@ macro(build_mumps)
     MD5 ${BUILD_MUMPS_MD5}
     DOWNLOAD_ONLY ${DOWNLOAD_ONLY}
     BUILD_ARGS
-      -D metis=true
-      -D METIS_LIBRARY=${METIS_LIB}
-      -D METIS_INCLUDE_DIR=${ParMETIS_INCLUDES}
-      -D PARMETIS_LIBRARY=${ParMETIS_LIB}
       -D CMAKE_Fortran_COMPILER=mpif90
       -D CMAKE_C_COMPILER=${CMAKE_MPI_C_COMPILER}
       -D CMAKE_CXX_COMPILER=${CMAKE_MPI_CXX_COMPILER}
@@ -74,7 +76,7 @@ macro(build_mumps)
       -D BUILD_SHARED_LIBS:BOOL=ON
       -D CMAKE_POLICY_DEFAULT_CMP0135:STRING=NEW
       ${MUMPS_CONFOPTS}
-      DEPENDS_ON ${MUMPS_DEPENDENCIES} ParMETIS
+      DEPENDS_ON ${MUMPS_DEPENDENCIES}
   )
 
   # Configure Trilinos to use MUMPS

@@ -57,6 +57,7 @@ macro(build_openblas)
 
   # Configure MUMPS to use OpenBLAS
   list(APPEND MUMPS_DEPENDENCIES "OpenBLAS")
+  list(APPEND MUMPS_CONFOPTS "-D USER_PROVIDED_BLAS_DIR:STRING=${OpenBLAS_DIR}")
 
   # Configure ScaLAPACK to use OpenBLAS
   list(APPEND SCALAPACK_DEPENDENCIES "OpenBLAS")
