@@ -35,7 +35,7 @@ macro(build_openblas)
     DOWNLOAD_ONLY ${DOWNLOAD_ONLY}
     BUILD_ARGS
       -D BUILD_SHARED_LIBS:BOOL=ON
-      -D CMAKE_Fortran_COMPILER=${CMAKE_Fortran_COMPILER}
+      -D CMAKE_Fortran_COMPILER=${CMAKE_MPI_Fortran_COMPILER}
   )
 
   #set(BLAS_LIBS ${OpenBLAS_DIR}/lib64/libopenblas${CMAKE_SHARED_LIBRARY_SUFFIX})
