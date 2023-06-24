@@ -58,7 +58,7 @@ macro(build_scalapack)
     DEPENDS_ON ${SCALAPACK_DEPENDENCIES}
   )
   
-  list(APPEND CMAKE_PREFIX_PATH "${ScaLAPACK_DIR}/lib64")
+  list(APPEND CMAKE_PREFIX_PATH "${ScaLAPACK_DIR}")
   
   # Configure deal.II to use ScaLAPACK
   list(APPEND DEALII_CONFOPTS "-D DEAL_II_WITH_SCALAPACK:BOOL=ON")

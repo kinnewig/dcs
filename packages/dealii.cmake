@@ -23,10 +23,10 @@ macro(build_dealii)
   endif()
 
   # Assamble the Download URL
-  set(TMP_NAME "dealii-${BUILD_DEALII_VERSION}")
+  set(TMP_NAME "v${BUILD_DEALII_VERSION}")
   set(TMP_PACKING ".tar.gz")
-  set(TMP_URL "https://github.com/dealii/dealii/releases/download/v${BUILD_DEALII_VERSION}/")
-  set(BUILD_DEALII_URL "${TMP_URL}${TMP_NAME}${TMP_PACKING}")
+  set(TMP_URL "https://github.com/kinnewig/dealii/archive/refs/tags/")
+  set(BUILD_DEALII_URL "${TMP_URL}${TMP_NAME}${TMP_MIRROR_PACKING}")
 
   # Assamble the Mirror (if provided)
   if(DEFINED MIRROR) 

@@ -82,6 +82,8 @@ macro(build_trilinos)
       ${TRILINOS_CONFOPTS}
     DEPENDS_ON ${TRILINOS_DEPENDENCIES} ParMETIS
   )
+
+  list(APPEND CMAKE_PREFIX_PATH "${Trilinos_DIR}")
   
   # Configure deal.II to use Trilinos
   list(APPEND DEALII_DEPENDENCIES "Trilinos")

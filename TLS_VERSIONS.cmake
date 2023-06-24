@@ -1,8 +1,8 @@
 ##############################################################################
 ##  GEOMETRY/CAD PACKAGES                                                   ##
 ##############################################################################
-set(DEALII_VERSION "9.4.2")
-set(DEALII_MD5     "91075c719c44652b9749d29663e31090")
+set(DEALII_VERSION "9.4.3")
+set(DEALII_MD5     "8ffb2c4bb8a164a0e96800704ae784ed")
 
 
 
@@ -59,7 +59,7 @@ set(GINKO_MD5 "d7ff9d564f8ca96b9ad33621821aff48")
 #set(MUMPS_VERSION "5.5.1.11")# <--removed possibility to provide Pathes for ScaLAPACK
 #set(MUMPS_MD5 "ea9d97276023a4ea8adce591f7c15a3a")
 set(MUMPS_VERSION "5.6.0.0") #<-- Adapted Fork from Scivision MUMPS
-set(MUMPS_MD5 "b371694cef38be80da58cbef4c4653dd")
+set(MUMPS_MD5 "95795c5afe584d403c19cbd913b52aa5")
 
 # superlu_dist
 set(SUPERLU_DIST_VERSION "5.1.2")
