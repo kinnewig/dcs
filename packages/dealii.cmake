@@ -26,7 +26,7 @@ macro(build_dealii)
   set(TMP_NAME "v${BUILD_DEALII_VERSION}")
   set(TMP_PACKING ".tar.gz")
   set(TMP_URL "https://github.com/kinnewig/dealii/archive/refs/tags/")
-  set(BUILD_DEALII_URL "${TMP_URL}${TMP_NAME}${TMP_MIRROR_PACKING}")
+  set(BUILD_DEALII_URL "${TMP_URL}${TMP_NAME}${TMP_PACKING}")
 
   # Assamble the Mirror (if provided)
   if(DEFINED MIRROR) 
