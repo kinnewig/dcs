@@ -257,16 +257,16 @@ done
 # ++============================================================++
 
 # set enviroment (TODO: needs to be improved)
-echo CC=mpicc
-echo CXX=mpicxx
-echo FC=mpifort
-echo FF=mpifort
-echo MPI_CC=mpicc
-echo MPI_CXX=mpicxx
-echo MPI_FC=mpifort
-echo MPI_FF=mpifort
+export CC=mpicc
+export CXX=mpicxx
+export FC=mpifort
+export FF=mpifort
+export MPI_CC=mpicc
+export MPI_CXX=mpicxx
+export MPI_FC=mpifort
+export MPI_FF=mpifort
 
 # TODO Mirror: -D MIRROR=http://distribution.ifam.uni-hannover.de/ASBT/DEAL/candi/V7/
 
-cmake -S . -B ${BUILD} -D CMAKE_INSTALL_PREFIX=${PREFIX_PATH} -D THREAD_COUNT=${THREADS} -D MIRROR=http://distribution.ifam.uni-hannover.de/ASBT/DEAL/candi/V7/
+cmake -S . -B ${BUILD} -D CMAKE_INSTALL_PREFIX=${PREFIX_PATH} -D THREAD_COUNT=${THREADS} -D MIRROR=http://distribution.ifam.uni-hannover.de/ASBT/DEAL/candi/V7/ -D BOOST_DIR:PATH=/opt/ifam/12.2.0-V3/lib64/boost-1.81.0
 cmake --build ${BUILD} --parallel ${THREADS} 2> >(tee error.log) | tee install.log
