@@ -96,7 +96,7 @@ list(APPEND INSTALL_TPLS "scalapack")
 ##Solvers/Linear Algebra
 #list(APPEND INSTALL_TPLS "ginkgo") 
 list(APPEND INSTALL_TPLS "mumps")
-list(APPEND INSTALL_TPLS "superlu_dist")
+#list(APPEND INSTALL_TPLS "superlu_dist")
 
 ##Parallel Linear Algebra Packages
 list(APPEND INSTALL_TPLS "trilinos")
@@ -108,7 +108,7 @@ list(APPEND INSTALL_TPLS "trilinos")
 #list(APPEND INSTALL_TPLS "symengine")
 
 ##Output
-#list(APPEND INSTALL_TPLS "hdf5")
+list(APPEND INSTALL_TPLS "hdf5")
 
 ##Applications using deal.II
 #list(APPEND INSTALL_APPS "aspect")
@@ -116,6 +116,29 @@ list(APPEND INSTALL_TPLS "trilinos")
 ## Get Versions
 include(TLS_VERSIONS.cmake)
 
+
+################################################################################
+## AOCL                                                                       ##
+################################################################################
+
+if(NOT DEFINED AOCL)
+  set(AOCL false)
+if(AOCL)
+  # Remove entries, that will be replaced by AOCL libraries
+  list(REMOVE_ITEM "openblas")
+  list(REMOVE_ITEM "scalapack")
+
+  # Add AOCL libraries
+  message("Add AOCL libraries:")
+  message("    AOCL-LibFLAME")
+  list(APPEND INSTALL_TPLS "aocl-libflame")
+  message("    AOCL-BLIS")
+  list(APPEND INSTALL_TPLS "aocl-blis")
+  message("    AOCL-ScaLAPACK")
+  list(APPEND INSTALL_TPLS "aocl-scalapack")
+
+  # Remark, we do not use AMD-MUMPS
+endif()
 
 ################################################################################
 ## ROUTINES FOR CHECKING AND BUILDING DEPENDENCIES OF DEAL_II                 ##

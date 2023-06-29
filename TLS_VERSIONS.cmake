@@ -5,6 +5,20 @@ set(DEALII_VERSION "9.4.2-r1")
 set(DEALII_MD5     "473bcab470f806e2b5c8c29f974c17da")
 
 
+##############################################################################
+##  AMD/AOCL                                                                    ##
+##############################################################################
+# AMD BLIS
+set(AOCL_BLIS_VERSION "4.0")
+set(AOCL_BLIS_MD5 "47a2d68d37353ebf7b81fedae527a601")
+
+# AOCL libFLAME
+set(AOCL_BLIS_VERSION "4.0")
+set(AOCL_BLIS_MD5 "3d31f486bf8f84d14a308fb0a26b0daf")
+
+# AOCL ScaLAPACK
+set(AOCL_SCALAPACK_VERSION "4.0")
+set(AOCL_SCALAPACK_MD5 "6d5be33d9409ca2777682bcbf96af9bd")
 
 ##############################################################################
 ##  GEOMETRY/CAD PACKAGES                                                   ##
