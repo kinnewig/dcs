@@ -25,7 +25,7 @@ macro(build_dealii)
   # Assamble the Download URL
   set(TMP_NAME "v${BUILD_DEALII_VERSION}")
   set(TMP_PACKING ".tar.gz")
-  set(TMP_URL "https://github.com/kinnewig/dealii/archive/refs/tags/")
+  set(TMP_URL "https://github.com/dealii/dealii/releases/download/${BUILD_DEALII_VERSION}/")
   set(BUILD_DEALII_URL "${TMP_URL}${TMP_NAME}${TMP_PACKING}")
 
   # Assamble the Mirror (if provided)
@@ -64,6 +64,7 @@ macro(build_dealii)
       -D DEAL_II_FORCE_BUNDLED_BOOST:BOOL=OFF 
       -D DEAL_II_WITH_ZLIB:BOOL=ON
       -D DEAL_II_COMPONENT_EXAMPLES:BOOL=ON
+      -D CMAKE_CXX_COMPILER="-Wchanges-meaning"
       -D CMAKE_POLICY_DEFAULT_CMP0057:STRING=NEW 
       -D CMAKE_POLICY_DEFAULT_CMP0074:STRING=NEW
       ${DEALII_CONFOPTS}
