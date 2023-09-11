@@ -1,11 +1,13 @@
 cmake_minimum_required(VERSION 3.24) #minimum 3.19 for MUMPS
 
-project(dcs VERSION 1.0.0 LANGUAGES Fortran C CXX)
 ################################################################################
 ##Policies includes and default variables                                     ##
 ################################################################################
 cmake_policy(SET CMP0057 NEW)
 cmake_policy(SET CMP0135 NEW)  #<-- Requires CMake Verision > 3.24
+
+project(dcs VERSION 1.0.0 LANGUAGES Fortran C CXX)
+message("CMAKE_PROJECT_NAME = ${CMAKE_PROJECT_NAME}")
 
 include(ExternalProject)
 include(FetchContent)
@@ -123,7 +125,7 @@ include(TLS_VERSIONS.cmake)
 
 if(NOT DEFINED AOCL)
   set(AOCL false)
-if(AOCL)
+elseif(AOCL)
   # Remove entries, that will be replaced by AOCL libraries
   list(REMOVE_ITEM "openblas")
   list(REMOVE_ITEM "scalapack")
