@@ -257,16 +257,23 @@ done
 # ++============================================================++
 
 # set enviroment (TODO: needs to be improved)
-export CC=mpicc
-export CXX=mpicxx
-export FC=mpifort
-export FF=mpifort
+
+source /opt/rh/rh-python38/enable
+#source /home/ifam/kinnewig/Software/AOCC/setenv_AOCC-4.0.sh
+export PATH=/home/ifam/kinnewig/Software/make-4.4/bin:$PATH
+
+export CC=gcc
+export CXX=g++
+export FC=gfortran
+export FF=gfortran
 export MPI_CC=mpicc
 export MPI_CXX=mpicxx
 export MPI_FC=mpifort
 export MPI_FF=mpifort
+export MPI_Fortran=mpifort
 
 # TODO Mirror: -D MIRROR=http://distribution.ifam.uni-hannover.de/ASBT/DEAL/candi/V7/
 
-cmake -S . -B ${BUILD} -D CMAKE_INSTALL_PREFIX=${PREFIX_PATH} -D THREAD_COUNT=${THREADS} -D MIRROR=http://distribution.ifam.uni-hannover.de/ASBT/DEAL/candi/V7/ -D BOOST_DIR:PATH=/opt/ifam/12.2.0-V3/lib64/boost-1.81.0
-cmake --build ${BUILD} --parallel ${THREADS} 2> >(tee error.log) | tee install.log
+cmake -S . -B ${BUILD} -D CMAKE_INSTALL_PREFIX=${PREFIX_PATH} -D THREAD_COUNT=${THREADS} -D MIRROR=http://distribution.ifam.uni-hannover.de/ASBT/DEAL/candi/V7/ -D BOOST_DIR:PATH=/opt/ifam/12.2.0-V3/lib64/boost-1.81.0 -D AOCL:BOOL=OFF -D TRILINOS_WITH_COMPLEX=ON
+
+  cmake --build ${BUILD} --parallel ${THREADS} 2> >(tee error.log) | tee install.log

@@ -1,5 +1,5 @@
 macro(build_mumps)
-  set(oneValueArgs VERSION MD5)
+  set(oneValueArgs VERSION MD5 MIRROR_NAME UPSTREAM_VERSION)
   cmake_parse_arguments(BUILD_MUMPS "" "${oneValueArgs}" "" ${ARGN})
 
   # Assamble the Download URL
@@ -16,8 +16,17 @@ macro(build_mumps)
     else()
       set(TMP_MIRROR_PACKING ${MIRROR_PACKING})
     endif()
+    
+    if (DEFINED BUILD_MUMPS_MIRROR_NAME)
+      set(TMP_NAME ${BUILD_MUMPS_MIRROR_NAME})
+    endif()
 
     set(BUILD_MUMPS_URL "${MIRROR}${TMP_NAME}${TMP_MIRROR_PACKING} ${BUILD_MUMPS_URL}")
+
+    # Also set the MIRROR for the upstream MUMPS:
+    list(APPEND MUMPS_CONFOPTS "-D MIRROR=${MIRROR}")
+    list(APPEND MUMPS_CONFOPTS "-D MIRROR_PACKING=${TMP_PACKING}")
+
     unset(TMP_MIRROR_PACKING)
   endif()
    
@@ -28,13 +37,20 @@ macro(build_mumps)
 
   # Overwrite MUMPS_CONFOPTS in order to use IntelMKL
   if (BLAS_TYPE STREQUAL "IntelMKL")
-    set(MUMPS_CONFOPTS -D MKLROOT=${MKL_ROOT})
+    set(MUMPS_CONFOPTS "-D MKLROOT=${MKL_ROOT}")
   endif()
 
   # If AOCL is enabled, we also need to tell MUMPS to use the corresponding libraries
   if (AOCL)
-    list(APPEND MUMPS_CONFOPTS -D AOCL:BOOL=ON)
+    list(APPEND MUMPS_CONFOPTS "-D AOCL:BOOL=ON")
     # TODO: Check that aocl-blis and aocl-libflame are available
+  endif()
+
+  list(APPEND MUMPS_CONFOPTS "-D BUILD_TESTING=OFF -D openmp=ON -D BUILD_SHARED_LIBS=ON -D parallel=ON -D CMAKE_BUILD_TYPE=Release -D CMAKE_POSITION_INDEPENDENT_CODE:BOOL=ON -D LAPACK_links:BOOL=ON")
+
+  if ( TRILINOS_WITH_COMPLEX )
+    list(APPEND MUMPS_CONFOPTS -D BUILD_COMPLEX:BOOL=ON -D BUILD_COMPLEX16:BOOL=ON -D MUMPS_LIBRARY_NAMES:STRING="dmumps;mumps_common;pord" )
+    #list(APPEND MUMPS_CONFOPTS "-D BUILD_COMPLEX:BOOL=ON")
   endif()
 
   set(BUILD_MUMPS_C_FLAGS "-g -fPIC -O3")
@@ -75,6 +91,7 @@ macro(build_mumps)
       -D CMAKE_POSITION_INDEPENDENT_CODE:BOOL=ON
       -D BUILD_SHARED_LIBS:BOOL=ON
       -D CMAKE_POLICY_DEFAULT_CMP0135:STRING=NEW
+      -D MUMPS_UPSTREAM_VERSION=${BUILD_MUMPS_UPSTREAM_VERSION}
       ${MUMPS_CONFOPTS}
     DEPENDS_ON ${MUMPS_DEPENDENCIES}
   )

@@ -1,4 +1,7 @@
 include(adolc.cmake)
+include(aocl_blis.cmake)
+include(aocl_libflame.cmake)
+include(aocl_scalapack.cmake)
 include(arpack.cmake)
 include(assimp.cmake)
 include(dealii.cmake)

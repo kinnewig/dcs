@@ -1,5 +1,5 @@
 macro(build_p4est)
-  set(oneValueArgs VERSION MD5)
+  set(oneValueArgs VERSION MD5 MIRROR_NAME)
   cmake_parse_arguments(BUILD_P4EST "" "${oneValueArgs}" "" ${ARGN})
   
   # Assamble the Download URL
@@ -15,6 +15,10 @@ macro(build_p4est)
       set(TMP_MIRROR_PACKING ${TMP_PACKING})
     else()
       set(TMP_MIRROR_PACKING ${MIRROR_PACKING})
+    endif()
+    
+    if (DEFINED BUILD_P4EST_MIRROR_NAME)
+      set(TMP_NAME ${BUILD_P4EST_MIRROR_NAME})
     endif()
 
     set(BUILD_P4EST_URL "${MIRROR}${TMP_NAME}${TMP_MIRROR_PACKING} ${BUILD_P4EST_URL}")
@@ -33,7 +37,7 @@ macro(build_p4est)
   set(p4est_fast_flags --prefix=${P4EST_INSTALL_PATH}/FAST CFLAGS=-O2)
   set(p4est_debug_flags --prefix=${P4EST_INSTALL_PATH}/DEBUG CFLAGS=-O0)
   set(p4est_enable_flags --enable-shared --disable-vtk-binary --without-blas --enable-mpi)
-  set(p4est_compile_flags F77=mpifort )
+  set(p4est_compile_flags F77=${CMAKE_MPI_Fortran_COMPILER} CC=${CMAKE_MPI_C_COMPILER} CXX=${CMAKE_MPI_CXX_COMPILER} )
 
   if(DOWNLOAD_ONLY)
     ExternalProject_Add(
