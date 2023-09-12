@@ -1,5 +1,5 @@
 macro(build_hdf5)
-  set(oneValueArgs VERSION MD5)
+  set(oneValueArgs VERSION MD5 MIRROR_NAME)
   cmake_parse_arguments(BUILD_HDF5 "" "${oneValueArgs}" "" ${ARGN})
 
   string(REPLACE "." "_" TMP_VERSION ${BUILD_HDF5_VERSION})
@@ -17,6 +17,10 @@ macro(build_hdf5)
       set(TMP_MIRROR_PACKING ${TMP_PACKING})
     else()
       set(TMP_MIRROR_PACKING ${MIRROR_PACKING})
+    endif()
+    
+    if (DEFINED BUILD_HDF5_MIRROR_NAME)
+      set(TMP_NAME ${BUILD_HDF5_MIRROR_NAME})
     endif()
 
     set(BUILD_HDF5_URL "${MIRROR}${TMP_NAME}${TMP_MIRROR_PACKING} ${BUILD_HDF5_URL}")
@@ -36,7 +40,7 @@ macro(build_hdf5)
     URL ${BUILD_HDF5_URL}
     MD5 ${BUILD_HDF5_MD5}
     DOWNLOAD_ONLY ${DOWNLOAD_ONLY}
-    CONFIGURE_FLAGS --enable-shared --enable-parallel
+    CONFIGURE_FLAGS CC=${CMAKE_MPI_C_COMPILER} CXX=${CMAKE_MPI_CXX_COMPILER} --enable-shared --enable-parallel
   )
   
   list(APPEND DEALII_DEPENDENCIES "hdf5")

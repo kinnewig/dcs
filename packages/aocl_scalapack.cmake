@@ -1,11 +1,9 @@
 macro(build_aocl_scalapack)
-  set(oneValueArgs VERSION MD5)
+  set(oneValueArgs VERSION MD5 MIRROR_NAME)
   cmake_parse_arguments(BUILD_AOCL_SCALAPACK "" "${oneValueArgs}" "" ${ARGN})
 
   set(BUILD_AOCL_SCALAPACK_C_FLAGS "-march=native -g -O3 -fPIC")
   set(BUILD_AOCL_SCALAPACK_F_FLAGS "-march=native -g -O3 -fallow-argument-mismatch")
-
-  # TODO Link with optional AMD Libs
 
   # Assamble the Download URL
   set(TMP_NAME "v${BUILD_AOCL_SCALAPACK_VERSION}")
@@ -21,8 +19,12 @@ macro(build_aocl_scalapack)
     else()
       set(TMP_MIRROR_PACKING ${MIRROR_PACKING})
     endif()
+    
+    if (DEFINED BUILD_AOCL_SCALAPACK_MIRROR_NAME)
+      set(TMP_NAME ${BUILD_AOCL_SCALAPACK_MIRROR_NAME})
+    endif()
   
-    set(BUILD_AOCL_SCALAPACK_URL "${MIRROR}${TMP_NAME}${TMP_MIRROR_PACKING} ${BUILD_SCALAPACK_URL}")
+    set(BUILD_AOCL_SCALAPACK_URL "${MIRROR}${TMP_NAME}${TMP_MIRROR_PACKING} ${BUILD_AICK_SCALAPACK_URL}")
     unset(TMP_MIRROR_PACKING)
   endif()
   
@@ -30,6 +32,7 @@ macro(build_aocl_scalapack)
   unset(TMP_NAME)
   unset(TMP_PACKING)
   unset(TMP_URL)
+  message("AOCL Scalapack URL: ${AOCL_SCALAPACK_CONFOPTS}" )
 
   # Build ScaLAPACK
   build_cmake_subproject(

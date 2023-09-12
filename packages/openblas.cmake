@@ -1,5 +1,5 @@
 macro(build_openblas)
-  set(oneValueArgs VERSION MD5)
+  set(oneValueArgs VERSION MD5 MIRROR_NAME)
   cmake_parse_arguments(BUILD_OPENBLAS "" "${oneValueArgs}" "" ${ARGN})
   
   # Assamble the Download URL
@@ -16,6 +16,10 @@ macro(build_openblas)
     else()
       set(TMP_MIRROR_PACKING ${MIRROR_PACKING})
     endif()
+    
+    if (DEFINED BUILD_OPENBLAS_MIRROR_NAME)
+      set(TMP_NAME ${BUILD_OPENBLAS_MIRROR_NAME})
+    endif()
 
     set(BUILD_OPENBLAS_URL "${MIRROR}${TMP_NAME}${TMP_MIRROR_PACKING} ${BUILD_OPENBLAS_URL}")
     unset(TMP_MIRROR_PACKING)
@@ -25,6 +29,11 @@ macro(build_openblas)
   unset(TMP_NAME)
   unset(TMP_PACKING)
   unset(TMP_URL)
+
+  if ( TRILINOS_WITH_COMPLEX )
+    list(APPEND OPENBLAS_CONFOPTS "-D float_type=COMPLEX;DOUBLE")
+  endif()
+
 
   # Build OpenBLAS
   build_cmake_subproject(
@@ -36,6 +45,7 @@ macro(build_openblas)
     BUILD_ARGS
       -D BUILD_SHARED_LIBS:BOOL=ON
       -D CMAKE_Fortran_COMPILER=${CMAKE_MPI_Fortran_COMPILER}
+      ${OPENBLAS_CONFOPTS}
   )
 
   #set(BLAS_LIBS ${OpenBLAS_DIR}/lib64/libopenblas${CMAKE_SHARED_LIBRARY_SUFFIX})
@@ -52,8 +62,8 @@ macro(build_openblas)
 
   # Configure Trilinos to use OpenBLAS
   list(APPEND TRILINOS_DEPENDENCIES "OpenBLAS")
-  list(APPEND TRILINOS_CONFOPTS "-D TPL_BLAS_LIBRARIES:STRING=${OpenBLAS_DIR}/lib64/libopenblas.so")
-  list(APPEND TRILINOS_CONFOPTS "-D TPL_LAPACK_LIBRARIES:STRING=${OpenBLAS_DIR}/lib64/libopenblas.so")
+  list(APPEND TRILINOS_CONFOPTS "-D TPL_BLAS_LIBRARIES:STRING=${OpenBLAS_DIR}/lib64/libopenblas${CMAKE_SHARED_LIBRARY_SUFFIX}")
+  list(APPEND TRILINOS_CONFOPTS "-D TPL_LAPACK_LIBRARIES:STRING=${OpenBLAS_DIR}/lib64/libopenblas${CMAKE_SHARED_LIBRARY_SUFFIX}")
 
   # Configure MUMPS to use OpenBLAS
   list(APPEND MUMPS_DEPENDENCIES "OpenBLAS")
@@ -61,5 +71,7 @@ macro(build_openblas)
 
   # Configure ScaLAPACK to use OpenBLAS
   list(APPEND SCALAPACK_DEPENDENCIES "OpenBLAS")
+  #list(APPEND SCALAPACK_CONFOPTS "-D LAPACK_OpenBLAS_FOUND=TRUE -D LAPACK_LIBRARY=${OpenBLAS_DIR}/lib64/libopenblas.so -D LAPACK_INCLUDE_DIR=${OpenBLAS_DIR}/include")
+  list(APPEND SCALAPACK_CONFOPTS "-D USER_PROVIDED_BLAS_DIR:STRING=${OpenBLAS_DIR}")
       
 endmacro()

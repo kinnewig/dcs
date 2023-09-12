@@ -1,5 +1,5 @@
 macro(build_aocl_blis)
-  set(oneValueArgs VERSION MD5)
+  set(oneValueArgs VERSION MD5 MIRROR_NAME)
   cmake_parse_arguments(BUILD_AOCL_BLIS "" "${oneValueArgs}" "" ${ARGN})
 
   # Assamble the Download URL
@@ -16,6 +16,10 @@ macro(build_aocl_blis)
     else()
       set(TMP_MIRROR_PACKING ${MIRROR_PACKING})
     endif()
+    
+    if (DEFINED BUILD_AOCL_BLIS_MIRROR_NAME)
+      set(TMP_NAME ${BUILD_AOCL_BLIS_MIRROR_NAME})
+    endif()    
 
     set(BUILD_AOCL_BLIS_URL "${MIRROR}${TMP_NAME}${TMP_MIRROR_PACKING} ${BUILD_AOCL_BLIS_URL}")
     unset(TMP_MIRROR_PACKING)
@@ -26,22 +30,26 @@ macro(build_aocl_blis)
   unset(TMP_PACKING)
   unset(TMP_URL)
 
-  # Set Blis flags
-  set(AOCL_BLIS_CONFOPTS "--enable-cblas CFLAGS='-DAOCL_F2C -fPIC' CXXFLAGS='-DAOCL_F2C -fPIC'")
+  # Set BLIS architecture if not defined yet
+  if (NOT DEFINED BLIS_ARCHITECTURE)
+    set(BLIS_ARCHITECTURE auto)
+  endif()
+
+  # Set BLIS flags
+  set(AOCL_BLIS_CONFOPTS --enable-cblas --enable-aocl-dynamic CFLAGS="-DAOCL_F2C -fPIC" CXXFLAGS="-DAOCL_F2C -fPIC" ${BLIS_ARCHITECTURE})
 
   build_autotools_subproject(
     NAME BLIS
     VERSION ${BUILD_AOCL_BLIS_VERSION}
     URL ${BUILD_AOCL_BLIS_URL}
-    MD5SUM ${BUILD_AOCL_BLIS__MD5}
+    MD5SUM ${BUILD_AOCL_BLIS_MD5}
     DOWNLOAD_ONLY ${DOWNLOAD_ONLY}
     CONFIGURE_FLAGS ${AOCL_BLIS_CONFOPTS}
   )
-  
+
   # Configure AOCL ScaLAPACK to use AOCL BLIS
   list(APPEND AOCL_SCALAPACK_DEPENDENCIES "BLIS")
-  # TODO automatically select suffix
-  list(APPEND "-D BLAS_LIBRARIES:PATH=${BLIS_DIR}/lib/libblis.so")
+  list(APPEND AOCL_SCALAPACK_CONFOPTS "-D BLAS_LIBRARIES:PATH=${BLIS_DIR}/lib/libblis${CMAKE_SHARED_LIBRARY_SUFFIX}")
   
   # Configure Trilinos to use AOCL BLIS
   list(APPEND TRILINOS_DEPENDENCIES "BLIS")

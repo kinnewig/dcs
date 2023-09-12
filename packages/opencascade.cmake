@@ -1,5 +1,5 @@
 macro(build_opencascade)
-  set(oneValueArgs VERSION MD5)
+  set(oneValueArgs VERSION MD5 MIRROR_NAME)
   cmake_parse_arguments(BUILD_OCE "" "${oneValueArgs}" "" ${ARGN})
   
   # Assamble the Download URL
@@ -15,6 +15,10 @@ macro(build_opencascade)
       set(TMP_MIRROR_PACKING ${TMP_PACKING})
     else()
       set(TMP_MIRROR_PACKING ${MIRROR_PACKING})
+    endif()
+    
+    if (DEFINED BUILD_OCE_MIRROR_NAME)
+      set(TMP_NAME ${BUILD_OCE_MIRROR_NAME})
     endif()
 
     set(BUILD_OCE_URL "${MIRROR}${TMP_NAME}${TMP_MIRROR_PACKING} ${BUILD_OCE_URL}")

@@ -1,13 +1,11 @@
 cmake_minimum_required(VERSION 3.24) #minimum 3.19 for MUMPS
 
+project(dcs VERSION 1.0.0 LANGUAGES Fortran C CXX)
 ################################################################################
 ##Policies includes and default variables                                     ##
 ################################################################################
 cmake_policy(SET CMP0057 NEW)
 cmake_policy(SET CMP0135 NEW)  #<-- Requires CMake Verision > 3.24
-
-project(dcs VERSION 1.0.0 LANGUAGES Fortran C CXX)
-message("CMAKE_PROJECT_NAME = ${CMAKE_PROJECT_NAME}")
 
 include(ExternalProject)
 include(FetchContent)
@@ -62,17 +60,17 @@ set(NUM_BUILD_JOBS ${PROCESSOR_COUNT} CACHE STRING
 
 # Remark: CMAKE_BUILD_PARALLEL_LEVEL only defines the maximum number of parallel jobs, 
 #         therfore this line is not usefull
-#set(CMAKE_BUILD_PARALLEL_LEVEL ${NUM_BUILD_JOBS})
+set(CMAKE_BUILD_PARALLEL_LEVEL ${NUM_BUILD_JOBS})
 if(NOT DEFINED THREAD_COUNT)
   set(THREAD_COUNT "1")
 endif()
-#set(DEFAULT_BUILD_COMMAND cmake --build . --config release --parallel ${THREAD_COUNT})
+set(DEFAULT_BUILD_COMMAND cmake --build . --config release --parallel ${THREAD_COUNT})
 
-if("${CMAKE_SYSTEM_NAME}" STREQUAL "Linux")
-  set(DEFAULT_BUILD_COMMAND "$(MAKE)" )
-else()
-  set(DEFAULT_BUILD_COMMAND cmake --build . --config release) 
-endif()
+#if("${CMAKE_SYSTEM_NAME}" STREQUAL "Linux")
+#  set(DEFAULT_BUILD_COMMAND "$(MAKE)" )
+#else()
+#  set(DEFAULT_BUILD_COMMAND cmake --build . --config release)
+#endif()
 
 ################################################################################
 ## USER SPECIFIED THIRD PARTY LIBRARIES AND APPLICATIONS                      ##
@@ -85,7 +83,7 @@ set(INSTALL_APPS "") #For safety reset this variable
 ##GEOMETRY/CAD PACKAGES
 #list(APPEND INSTALL_TPLS "assimp")
 #list(APPEND INSTALL_TPLS "gmsh")
-list(APPEND INSTALL_TPLS "opencascade")
+#list(APPEND INSTALL_TPLS "opencascade")
 
 ## Basic Linear Algebra
 list(APPEND INSTALL_TPLS "openblas")
@@ -110,13 +108,11 @@ list(APPEND INSTALL_TPLS "trilinos")
 #list(APPEND INSTALL_TPLS "symengine")
 
 ##Output
-list(APPEND INSTALL_TPLS "hdf5")
+#list(APPEND INSTALL_TPLS "hdf5")
 
 ##Applications using deal.II
 #list(APPEND INSTALL_APPS "aspect")
 
-## Get Versions
-include(TLS_VERSIONS.cmake)
 
 
 ################################################################################
@@ -127,20 +123,21 @@ if(NOT DEFINED AOCL)
   set(AOCL false)
 elseif(AOCL)
   # Remove entries, that will be replaced by AOCL libraries
-  list(REMOVE_ITEM "openblas")
-  list(REMOVE_ITEM "scalapack")
+  list(REMOVE_ITEM INSTALL_TPLS "openblas")
+  list(REMOVE_ITEM INSTALL_TPLS "scalapack")
 
   # Add AOCL libraries
   message("Add AOCL libraries:")
   message("    AOCL-LibFLAME")
-  list(APPEND INSTALL_TPLS "aocl-libflame")
+  list(APPEND INSTALL_TPLS "aocl_libflame")
   message("    AOCL-BLIS")
-  list(APPEND INSTALL_TPLS "aocl-blis")
+  list(APPEND INSTALL_TPLS "aocl_blis")
   message("    AOCL-ScaLAPACK")
-  list(APPEND INSTALL_TPLS "aocl-scalapack")
-
-  # Remark, we do not use AMD-MUMPS
+  list(APPEND INSTALL_TPLS "aocl_scalapack")
 endif()
+
+## Get Versions
+include(TLS_VERSIONS.cmake)
 
 ################################################################################
 ## ROUTINES FOR CHECKING AND BUILDING DEPENDENCIES OF DEAL_II                 ##
@@ -169,8 +166,9 @@ build_packages()
 ## DEALII ITSELF                                                                 ##
 ###################################################################################
 build_dealii(
-  VERSION ${DEALII_VERSION} 
-  MD5     ${DEALII_MD5}
+  VERSION     ${DEALII_VERSION}
+  MD5         ${DEALII_MD5}
+  MIRROR_NAME ${DEALII_MIRROR_NAME}
   MAIN    TRUE
 )
 

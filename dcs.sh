@@ -265,6 +265,7 @@ export MPI_CC=mpicc
 export MPI_CXX=mpicxx
 export MPI_FC=mpifort
 export MPI_FF=mpifort
+export MPI_Fortran=mpifort
 
 cmake -S . -B ${BUILD} -D CMAKE_INSTALL_PREFIX=${PREFIX_PATH} -D THREAD_COUNT=${THREADS} -D MIRROR=https://tjhei.info/candi-mirror/
 cmake --build ${BUILD} --parallel ${THREADS} 2> >(tee error.log) | tee install.log
