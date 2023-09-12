@@ -86,7 +86,8 @@ set(INSTALL_APPS "") #For safety reset this variable
 #list(APPEND INSTALL_TPLS "opencascade")
 
 ## Basic Linear Algebra
-list(APPEND INSTALL_TPLS "openblas")
+list(APPEND INSTALL_TPLS "blis")
+#list(APPEND INSTALL_TPLS "openblas")
 
 ##Parallel Tools
 list(APPEND INSTALL_TPLS "p4est")
@@ -124,6 +125,7 @@ if(NOT DEFINED AOCL)
 elseif(AOCL)
   # Remove entries, that will be replaced by AOCL libraries
   list(REMOVE_ITEM INSTALL_TPLS "openblas")
+  list(REMOVE_ITEM INSTALL_TPLS "blis")
   list(REMOVE_ITEM INSTALL_TPLS "scalapack")
 
   # Add AOCL libraries

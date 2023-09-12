@@ -1,5 +1,5 @@
 macro(build_blis)
-  set(oneValueArgs VERSION MD5)
+  set(oneValueArgs VERSION MD5 MIRROR_NAME)
   cmake_parse_arguments(BUILD_BLIS "" "${oneValueArgs}" "" ${ARGN})
 
   # Assamble the Download URL
@@ -17,6 +17,10 @@ macro(build_blis)
       set(TMP_MIRROR_PACKING ${MIRROR_PACKING})
     endif()
 
+    if (DEFINED BUILD_BLIS_MIRROR_NAME)
+      set(TMP_NAME ${BUILD_AOCL_BLIS_MIRROR_NAME})
+    endif()    
+
     set(BUILD_BLIS_URL "${MIRROR}${TMP_NAME}${TMP_MIRROR_PACKING} ${BUILD_BLIS_URL}")
     unset(TMP_MIRROR_PACKING)
   endif()
@@ -26,22 +30,26 @@ macro(build_blis)
   unset(TMP_PACKING)
   unset(TMP_URL)
 
-  # Set Blis flags
+  # Set BLIS architecture if not defined yet
+  if (NOT DEFINED BLIS_ARCHITECTURE)
+    set(BLIS_ARCHITECTURE auto)
+  endif()
+
+  # Set BLIS flags
   set(BLIS_CONFOPTS "--enable-cblas CFLAGS='-DAOCL_F2C -fPIC' CXXFLAGS='-DAOCL_F2C -fPIC'")
 
   build_autotools_subproject(
     NAME BLIS
     VERSION ${BUILD_BLIS_VERSION}
     URL ${BUILD_BLIS_URL}
-    MD5SUM ${BUILD_BLIS__MD5}
+    MD5SUM ${BUILD_BLIS_MD5}
     DOWNLOAD_ONLY ${DOWNLOAD_ONLY}
     CONFIGURE_FLAGS ${BLIS_CONFOPTS}
   )
-  
+
   # Configure ScaLAPACK to use BLIS
-  list(APPEND AOCL_SCALAPACK_DEPENDENCIES "BLIS")
-  # TODO automatically select suffix
-  list(APPEND "-D BLAS_LIBRARIES:PATH=${BLIS_DIR}/lib/libblis.so")
+  list(APPEND SCALAPACK_DEPENDENCIES "BLIS")
+  list(APPEND SCALAPACK_CONFOPTS "-D BLAS_LIBRARIES:PATH=${BLIS_DIR}/lib/libblis${CMAKE_SHARED_LIBRARY_SUFFIX}")
   
   # Configure Trilinos to use BLIS
   list(APPEND TRILINOS_DEPENDENCIES "BLIS")

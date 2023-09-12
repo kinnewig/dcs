@@ -60,9 +60,10 @@ macro(build_packages)
   ## BLAS/LAPACK/SCALAPACK STACK                                              ##
   ##############################################################################
   if(${INSTALL_blis})
-    build_blis (
-      VERSION ${BLIS_VERSION}
-      MD5     ${BLIS_MD5}
+    build_blis(
+      VERSION     ${BLIS_VERSION}
+      MD5         ${BLIS_MD5}
+      MIRROR_NAME ${BLIS_MIRROR_NAME}
     )
   endif()
 

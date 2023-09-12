@@ -59,6 +59,10 @@ set(PARMETIS_MD5 "f69c479586bf6bb7aff6a9bc0c739628")
 ##############################################################################
 ## BLAS/LAPACK/SCALAPACK STACK                                              ##
 ##############################################################################
+# BLIS
+set(BLIS_VERSION "0.9.0")
+set(BLIS_MD5 "b39045e450d612f712365b2f4bc16f18")
+
 # OpenBLAS
 set(OPENBLAS_VERSION "0.3.13")
 set(OPENBLAS_MD5 "2ca05b9cee97f0d1a8ab15bd6ea2b747")
