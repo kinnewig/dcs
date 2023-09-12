@@ -36,7 +36,7 @@ macro(build_blis)
   endif()
 
   # Set BLIS flags
-  set(BLIS_CONFOPTS "--enable-cblas CFLAGS='-DAOCL_F2C -fPIC' CXXFLAGS='-DAOCL_F2C -fPIC'")
+  set(BLIS_CONFOPTS --enable-cblas CFLAGS="-DAOCL_F2C -fPIC" CXXFLAGS="-DAOCL_F2C -fPIC" ${BLIS_ARCHITECTURE})
 
   build_autotools_subproject(
     NAME BLIS
