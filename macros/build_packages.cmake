@@ -53,6 +53,13 @@ macro(build_packages)
   ##############################################################################
   ## BLAS/LAPACK/SCALAPACK STACK                                              ##
   ##############################################################################
+  if(${INSTALL_blis})
+    build_blis (
+      VERSION ${BLIS_VERSION}
+      MD5     ${BLIS_MD5}
+    )
+  endif()
+
   if(${INSTALL_openblas})
     build_openblas(
       VERSION ${OPENBLAS_VERSION}
