@@ -59,9 +59,15 @@ set(PARMETIS_MD5 "f69c479586bf6bb7aff6a9bc0c739628")
 ##############################################################################
 ## BLAS/LAPACK/SCALAPACK STACK                                              ##
 ##############################################################################
+# LIBFLAME (provides LAPACK)
+set(LIBFLAME_VERSION "5.2.0")
+set(LIBFLAME_MD5 "57b39f3cedcd72e3dbb7afbe9f53a57c")
+#set(LIBFLAME_MIRROR_NAME "")
+
 # BLIS
 set(BLIS_VERSION "0.9.0")
 set(BLIS_MD5 "b39045e450d612f712365b2f4bc16f18")
+#set(BLIS_MIRROR_NAME "")
 
 # OpenBLAS
 set(OPENBLAS_VERSION "0.3.13")

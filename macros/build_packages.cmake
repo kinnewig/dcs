@@ -59,6 +59,14 @@ macro(build_packages)
   ##############################################################################
   ## BLAS/LAPACK/SCALAPACK STACK                                              ##
   ##############################################################################
+  if(${INSTALL_LIBFLAME})
+    build_libflame(
+      VERSION     ${LIBFLAME_VERSION}
+      MD5         ${LIBFLAME_MD5}
+      MIRROR_NAME ${LIBFLAME_MIRROR_NAME}
+    )
+  endif()
+
   if(${INSTALL_blis})
     build_blis(
       VERSION     ${BLIS_VERSION}
