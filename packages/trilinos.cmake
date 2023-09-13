@@ -1,5 +1,5 @@
 macro(build_trilinos)
-  set(oneValueArgs VERSION MD5)
+  set(oneValueArgs VERSION MD5 MIRROR_NAME)
   cmake_parse_arguments(BUILD_TRILINOS "" "${oneValueArgs}" "" ${ARGN})
 
   # Assamble the Download URL
@@ -17,9 +17,20 @@ macro(build_trilinos)
     else()
       set(TMP_MIRROR_PACKING ${MIRROR_PACKING})
     endif()
+    
+    if (DEFINED BUILD_TRILINOS_MIRROR_NAME)
+      set(TMP_NAME ${BUILD_TRILINOS_MIRROR_NAME})
+    endif()
 
     set(BUILD_TRILINOS_URL "${MIRROR}${TMP_NAME}${TMP_PACKING} ${BUILD_TRILINOS_URL}")
     unset(TMP_MIRROR_PACKING)
+  endif()
+  
+  # Complex number support
+  if ( TRILINOS_WITH_COMPLEX )
+    list(APPEND TRILINOS_CONFOPTS "-D Trilinos_ENABLE_COMPLEX_DOUBLE=ON")
+    list(APPEND TRILINOS_CONFOPTS "-D Trilinos_ENABLE_COMPLEX_FLOAT=ON")
+    list(APPEND TRILINOS_CONFOPTS "-D Teuchos_ENABLE_COMPLEX:BOOL=ON")
   endif()
 
   # ParMETIS
@@ -82,6 +93,8 @@ macro(build_trilinos)
       ${TRILINOS_CONFOPTS}
     DEPENDS_ON ${TRILINOS_DEPENDENCIES} ParMETIS
   )
+
+  list(APPEND CMAKE_PREFIX_PATH "${Trilinos_DIR}")
   
   # Configure deal.II to use Trilinos
   list(APPEND DEALII_DEPENDENCIES "Trilinos")

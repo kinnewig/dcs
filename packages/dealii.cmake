@@ -1,5 +1,5 @@
 macro(build_dealii)
-  set(oneValueArgs VERSION MD5)
+  set(oneValueArgs VERSION MD5 MIRROR_NAME)
   cmake_parse_arguments(BUILD_DEALII "" "${oneValueArgs}" "" ${ARGN})
 
   string(REPLACE "." ";" TMPLIST ${BUILD_DEALII_VERSION})
@@ -37,6 +37,10 @@ macro(build_dealii)
       set(TMP_MIRROR_PACKING ${MIRROR_PACKING})
     endif()
 
+    if (DEFINED BUILD_DEALII_MIRROR_NAME)
+      set(TMP_NAME ${BUILD_DEALII_MIRROR_NAME})
+    endif()
+
     set(BUILD_DEALII_URL "${MIRROR}${TMP_NAME}${TMP_MIRROR_PACKING} ${BUILD_DEALII_URL}")
     unset(TMP_MIRROR_PACKING)
   endif()
@@ -45,6 +49,10 @@ macro(build_dealii)
   unset(TMP_NAME)
   unset(TMP_PACKING)
   unset(TMP_URL)
+
+  if ( TRILINOS_WITH_COMPLEX )
+    list(APPEND DEALII_CONFOPTS -D DEAL_II_WITH_COMPLEX_VALUES:BOOL=ON)
+  endif()
 
   build_cmake_subproject(
     NAME dealii
@@ -64,6 +72,8 @@ macro(build_dealii)
       -D DEAL_II_FORCE_BUNDLED_BOOST:BOOL=OFF 
       -D DEAL_II_WITH_ZLIB:BOOL=ON
       -D DEAL_II_COMPONENT_EXAMPLES:BOOL=ON
+      -D CMAKE_C_COMPILER=${CMAKE_MPI_C_COMPILER}
+      -D CMAKE_CXX_COMPILER=${CMAKE_MPI_CXX_COMPILER}
       -D CMAKE_POLICY_DEFAULT_CMP0057:STRING=NEW 
       -D CMAKE_POLICY_DEFAULT_CMP0074:STRING=NEW
       ${DEALII_CONFOPTS}

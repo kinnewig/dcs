@@ -1,5 +1,5 @@
 macro(build_parmetis)
-  set(oneValueArgs VERSION MD5)
+  set(oneValueArgs VERSION MD5 MIRROR_NAME)
   cmake_parse_arguments(BUILD_PARMETIS "" "${oneValueArgs}" "" ${ARGN})
 
   # Assamble the Download URL
@@ -15,6 +15,10 @@ macro(build_parmetis)
       set(TMP_MIRROR_PACKING ${TMP_PACKING})
     else()
       set(TMP_MIRROR_PACKING ${MIRROR_PACKING})
+    endif()
+    
+    if (DEFINED BUILD_PARMETIS_MIRROR_NAME)
+      set(TMP_NAME ${BUILD_PARMETIS_MIRROR_NAME})
     endif()
 
     set(BUILD_PARMETIS_URL "${MIRROR}${TMP_NAME}${TMP_MIRROR_PACKING} ${BUILD_PARMETIS_URL}")
@@ -51,7 +55,8 @@ macro(build_parmetis)
           -D GKLIB_PATH=GKlib
           -D CMAKE_INSTALL_PREFIX=${SUBPROJECT_INSTALL_PATH}
           -D SHARED=1
-          -D CMAKE_C_COMPILER=${CMAKE_C_COMPILER}
+          -D CMAKE_C_COMPILER=${CMAKE_MPI_C_COMPILER}
+          -D CMAKE_C_FLAGS=-fpic
     )
     
     SET(PARMETIS_CONFOPTS 
@@ -61,6 +66,7 @@ macro(build_parmetis)
           -D CMAKE_INSTALL_PREFIX=${SUBPROJECT_INSTALL_PATH}
           -D SHARED=1
           -D CMAKE_C_COMPILER=${CMAKE_MPI_C_COMPILER}
+          -D CMAKE_C_FLAGS=-fpic
     )
     #Does not work as cmake_subproject as the metis and GKlib paths have to be specified in a weird way
     
@@ -107,15 +113,9 @@ macro(build_parmetis)
   set(ParMETIS_LIB ${ParMETIS_DIR}/lib/libparmetis${CMAKE_SHARED_LIBRARY_SUFFIX})
   set(METIS_LIB ${ParMETIS_DIR}/lib/libmetis${CMAKE_SHARED_LIBRARY_SUFFIX})
   set(ParMETIS_INCLUDES ${ParMETIS_DIR}/include)
-
-  # Configure deal.II to use ParMETIS
   list(APPEND DEALII_DEPENDENCIES "ParMETIS")
   list(APPEND DEALII_CONFOPTS "-D DEAL_II_WITH_METIS:BOOL=ON")
   list(APPEND DEALII_CONFOPTS "-D METIS_DIR=${ParMETIS_DIR}")
   
-  # Configure MUMPS to use ParMETIS
-  list(APPEND MUMPS_DEPENDENCIES "ParMETIS")
-  list(APPEND MUMPS_CONFOPTS "-D metis=true")
-  list(APPEND MUMPS_CONFOPTS "-D USER_PROVIDED_PARMETIS_DIR=${ParMETIS_DIR}")
 endmacro()
 

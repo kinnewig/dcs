@@ -1,7 +1,7 @@
 macro(build_cmake_subproject)
   # See cmake_parse_arguments docs to see how args get parsed here:
   #    https://cmake.org/cmake/help/latest/command/cmake_parse_arguments.html
-  set(oneValueArgs NAME VERSION URL MD5 DOWNLOAD_ONLY INSTALL_COMMAND)
+  set(oneValueArgs NAME VERSION URL MD5 DOWNLOAD_ONLY INSTALL_COMMAND PATCH_COMMAND)
   set(multiValueArgs BUILD_ARGS DEPENDS_ON)
   cmake_parse_arguments(BUILD_SUBPROJECT "" "${oneValueArgs}"
                         "${multiValueArgs}" ${ARGN})
@@ -34,6 +34,7 @@ macro(build_cmake_subproject)
   ExternalProject_Add(${SUBPROJECT_NAME}
     PATCH_COMMAND ${SUBPROJECT_PATCH_COMMAND}
     CONFIGURE_COMMAND ${SUBPROJECT_CONFIGURE_COMMAND}
+    PATCH_COMMAND ${SUBPROJECT_PATCH_COMMAND}
     BUILD_COMMAND ${SUBPROJECT_BUILD_COMMAND}
     INSTALL_COMMAND ${BUILD_SUBPROJECT_INSTALL_COMMAND}
     BUILD_ALWAYS OFF
@@ -49,6 +50,7 @@ macro(build_cmake_subproject)
     CMAKE_ARGS
       -DCMAKE_MPI_C_COMPILER=${CMAKE_MPI_C_COMPILER}
       -DCMAKE_MPI_CXX_COMPILER=${CMAKE_MPI_CXX_COMPILER}
+      -DCMAKE_MPI_Fortran_COMPILER=${CMAKE_MPI_Fortran_COMPILER}
       -DCMAKE_INSTALL_PREFIX=${SUBPROJECT_INSTALL_PATH}
       -DCMAKE_INSTALL_INCLUDEDIR=${CMAKE_INSTALL_INCLUDEDIR}
       -DCMAKE_INSTALL_LIBDIR=${CMAKE_INSTALL_LIBDIR}

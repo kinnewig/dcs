@@ -1,5 +1,5 @@
 macro(build_ginkgo)
-  set(oneValueArgs VERSION MD5)
+  set(oneValueArgs VERSION MD5 MIRROR_NAME)
   cmake_parse_arguments(BUILD_GINKO "" "${oneValueArgs}" "" ${ARGN})
 
   # Assamble the Download URL
@@ -15,6 +15,10 @@ macro(build_ginkgo)
       set(TMP_MIRROR_PACKING ${TMP_PACKING})
     else()
       set(TMP_MIRROR_PACKING ${MIRROR_PACKING})
+    endif()
+    
+    if (DEFINED BUILD_GINKO_MIRROR_NAME)
+      set(TMP_NAME ${BUILD_GINKO_MIRROR_NAME})
     endif()
 
     set(BUILD_GINKO_URL "${MIRROR}${TMP_NAME}${TMP_MIRROR_PACKING} ${BUILD_GINKO_URL}")
